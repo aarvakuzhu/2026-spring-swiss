@@ -35,6 +35,20 @@ const DEFAULT_CHECKLIST = [
   { category: 'note', text: 'Zurich Lindenhügel — quiet hill with panoramic city view', dayIndex: 6, relevantFamilies: ['ashok', 'rajesh'] },
 ];
 
+// GET /api/seed/:token — trigger from browser
+router.get('/:token', async (req, res) => {
+  if (req.params.token !== 'swiss2026-seed-now') return res.status(403).json({ error: 'Forbidden' });
+  try {
+    const existing = await ChecklistItem.countDocuments();
+    if (existing === 0) {
+      await ChecklistItem.insertMany(DEFAULT_CHECKLIST);
+      res.json({ ok: true, seeded: DEFAULT_CHECKLIST.length });
+    } else {
+      res.json({ ok: true, skipped: true, existing });
+    }
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // POST /api/seed  — protected by a secret token
 router.post('/:token', async (req, res) => {
   if (req.params.token !== 'swiss2026-seed-now') {
