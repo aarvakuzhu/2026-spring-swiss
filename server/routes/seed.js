@@ -5,38 +5,54 @@ const TripState = require('../models/TripState');
 const MEMBERS = require('../seedMembers');
 
 const DEFAULT_CHECKLIST = [
-  // ── BEFORE TRAVEL ──
-  { category: 'before-travel', text: 'Purchase Swiss Travel Pass (Adult + Child)', isBookingRequired: true, bookingUrl: 'https://www.swisstravelsystem.com/en/swiss-travel-pass/', priority: 'high', relevantFamilies: ['ashok', 'rajesh'] },
-  { category: 'before-travel', text: 'Book GoldenPass Express reservation (Geneva → Interlaken, Apr 5)', isBookingRequired: true, bookingUrl: 'https://www.goldenpass.ch/en/goldenpass-express/reservation', priority: 'high', relevantFamilies: ['ashok'] },
-  { category: 'before-travel', text: 'Book Schilthorn tickets — Piz Gloria + Thrill Walk (Apr 6)', isBookingRequired: true, bookingUrl: 'https://www.schilthorn.ch/en/planning/tickets/online-tickets', priority: 'high', relevantFamilies: ['ashok', 'rajesh'] },
-  { category: 'before-travel', text: 'Book Grindelwald First gondola + Cliff Walk (Apr 7)', isBookingRequired: true, bookingUrl: 'https://www.jungfrau.ch/en-gb/grindelwald-first/tickets/', priority: 'high', relevantFamilies: ['ashok', 'rajesh'] },
-  { category: 'before-travel', text: 'Book Klein Matterhorn / Matterhorn Glacier Paradise (Apr 8)', isBookingRequired: true, bookingUrl: 'https://www.matterhornparadise.ch/en/experience/tickets-prices', priority: 'high', relevantFamilies: ['ashok', 'rajesh'] },
-  { category: 'before-travel', text: 'Book Lindt Home of Chocolate — Zürich (Apr 10)', isBookingRequired: true, bookingUrl: 'https://www.lindt-home-of-chocolate.com/en/tickets/', priority: 'medium', relevantFamilies: ['ashok', 'rajesh'] },
-  { category: 'before-travel', text: 'Download SBB Mobile App', priority: 'high', relevantFamilies: ['ashok', 'rajesh'] },
-  { category: 'before-travel', text: 'Download MeteoSwiss App', priority: 'medium', relevantFamilies: ['ashok', 'rajesh'] },
-  { category: 'before-travel', text: 'Notify bank / credit cards of Switzerland travel', priority: 'high', relevantFamilies: ['ashok', 'rajesh'] },
-  { category: 'before-travel', text: 'Get Swiss Francs (CHF) — ATMs widely available in Switzerland', priority: 'medium', relevantFamilies: ['ashok', 'rajesh'] },
-  { category: 'before-travel', text: 'International data plan for Switzerland', priority: 'high', relevantFamilies: ['ashok', 'rajesh'] },
-  { category: 'before-travel', text: 'Check passport expiry — must be valid 6+ months past Apr 12', priority: 'high', relevantFamilies: ['ashok', 'rajesh'] },
 
-  // ── PACKING ──
-  { category: 'packing', text: 'Warm layers — summit temps can be −5°C even in April', priority: 'high', relevantFamilies: ['ashok', 'rajesh'] },
-  { category: 'packing', text: 'Waterproof jacket / rain gear for each person', priority: 'high', relevantFamilies: ['ashok', 'rajesh'] },
-  { category: 'packing', text: 'Sturdy walking shoes / light hiking boots', priority: 'high', relevantFamilies: ['ashok', 'rajesh'] },
-  { category: 'packing', text: 'Sunscreen + sunglasses (glacier UV is intense)', priority: 'high', relevantFamilies: ['ashok', 'rajesh'] },
-  { category: 'packing', text: 'Power adapter — Switzerland uses Type J (3-pin)', priority: 'high', relevantFamilies: ['ashok', 'rajesh'] },
-  { category: 'packing', text: 'Portable power bank for long days out', priority: 'medium', relevantFamilies: ['ashok', 'rajesh'] },
-  { category: 'packing', text: 'Kids: snacks, earphones, entertainment for long train rides', priority: 'medium', relevantFamilies: ['ashok', 'rajesh'] },
-  { category: 'packing', text: 'Camera / extra memory cards', priority: 'low', relevantFamilies: ['ashok', 'rajesh'] },
+  // ══════════════════════════════════
+  // THINGS TO BUY — common for everyone
+  // ══════════════════════════════════
+  { category: 'packing', priority: 'high',   text: 'Backpacks — one per person, day-hike size (20–30L)',         relevantFamilies: ['ashok','rajesh'], addedBy: 'Ashok' },
+  { category: 'packing', priority: 'high',   text: 'Charger adapter — Switzerland uses Type J (3-pin)',           relevantFamilies: ['ashok','rajesh'], addedBy: 'Ashok' },
+  { category: 'packing', priority: 'high',   text: 'Disposable rain coat — one per person',                       relevantFamilies: ['ashok','rajesh'], addedBy: 'Ashok' },
+  { category: 'packing', priority: 'medium', text: 'Refillable water bottle — can reuse existing',               relevantFamilies: ['ashok','rajesh'], addedBy: 'Ashok' },
+  { category: 'packing', priority: 'high',   text: 'Waterproof shoes / boots — essential for mountain days',     relevantFamilies: ['ashok','rajesh'], addedBy: 'Ashok' },
+  { category: 'packing', priority: 'high',   text: 'Compact travel umbrella',                                     relevantFamilies: ['ashok','rajesh'], addedBy: 'Ashok' },
+  { category: 'packing', priority: 'medium', text: 'Hand warmers — on sale at Kroger!',                          relevantFamilies: ['ashok','rajesh'], addedBy: 'Ashok' },
+  { category: 'packing', priority: 'high',   text: 'Jacket — warm, windproof (summit temps can be −5°C)',        relevantFamilies: ['ashok','rajesh'], addedBy: 'Ashok' },
+  { category: 'packing', priority: 'high',   text: 'Ear muffs or hat, gloves, and scarf',                        relevantFamilies: ['ashok','rajesh'], addedBy: 'Ashok' },
+  { category: 'packing', priority: 'medium', text: 'Vaseline or chapstick — cold air dries lips fast',           relevantFamilies: ['ashok','rajesh'], addedBy: 'Ashok' },
+  { category: 'packing', priority: 'medium', text: 'Sunglasses — glacier UV is intense even in April',           relevantFamilies: ['ashok','rajesh'], addedBy: 'Ashok' },
+  { category: 'packing', priority: 'medium', text: 'Snacks for train rides — kids especially',                   relevantFamilies: ['ashok','rajesh'], addedBy: 'Ashok' },
+  { category: 'packing', priority: 'high',   text: 'Thermal wear / base layers',                                 relevantFamilies: ['ashok','rajesh'], addedBy: 'Ashok' },
 
-  // ── AREAS TO EXPLORE ──
-  { category: 'note', text: 'Rifelsee Lake reflection of Matterhorn — best at sunrise', dayIndex: 4, relevantFamilies: ['ashok', 'rajesh'] },
-  { category: 'note', text: 'Grindelwald First — try the Flyer zipline if open in April', dayIndex: 3, relevantFamilies: ['ashok', 'rajesh'] },
-  { category: 'note', text: 'Lauterbrunnen Valley — 72 waterfalls visible from the road', dayIndex: 2, relevantFamilies: ['ashok', 'rajesh'] },
-  { category: 'note', text: 'Zurich Lindenhügel — quiet hill with panoramic city view', dayIndex: 6, relevantFamilies: ['ashok', 'rajesh'] },
+  // Individual — KP / ladies
+  { category: 'packing', priority: 'medium', text: 'Makeup items and coconut oil',                               relevantFamilies: ['ashok','rajesh'], addedBy: 'KP' },
+
+  // ══════════════════════════════════
+  // BEFORE TRAVEL — bookings & admin
+  // ══════════════════════════════════
+  { category: 'before-travel', priority: 'high',   text: 'Purchase Swiss Travel Pass — Adult + Child',           relevantFamilies: ['ashok','rajesh'], isBookingRequired: true,  bookingUrl: 'https://www.swisstravelsystem.com/en/swiss-travel-pass/' },
+  { category: 'before-travel', priority: 'high',   text: 'Book GoldenPass Express seat (Apr 5 Geneva → Interlaken)', relevantFamilies: ['ashok'],       isBookingRequired: true,  bookingUrl: 'https://www.goldenpass.ch/en/goldenpass-express/reservation' },
+  { category: 'before-travel', priority: 'high',   text: 'Book Schilthorn / Piz Gloria + Thrill Walk (Apr 6)',   relevantFamilies: ['ashok','rajesh'], isBookingRequired: true,  bookingUrl: 'https://www.schilthorn.ch/en/planning/tickets/online-tickets' },
+  { category: 'before-travel', priority: 'high',   text: 'Book Grindelwald First Cliff Walk gondola (Apr 7)',    relevantFamilies: ['ashok','rajesh'], isBookingRequired: true,  bookingUrl: 'https://www.jungfrau.ch/en-gb/grindelwald-first/tickets/' },
+  { category: 'before-travel', priority: 'high',   text: 'Book Klein Matterhorn / Glacier Paradise (Apr 8)',     relevantFamilies: ['ashok','rajesh'], isBookingRequired: true,  bookingUrl: 'https://www.matterhornparadise.ch/en/experience/tickets-prices' },
+  { category: 'before-travel', priority: 'medium', text: 'Book Lindt Home of Chocolate — Zürich (Apr 10)',       relevantFamilies: ['ashok','rajesh'], isBookingRequired: true,  bookingUrl: 'https://www.lindt-home-of-chocolate.com/en/tickets/' },
+  { category: 'before-travel', priority: 'high',   text: 'Check passport expiry — must be valid 6+ months past Apr 12', relevantFamilies: ['ashok','rajesh'] },
+  { category: 'before-travel', priority: 'high',   text: 'Notify bank / credit cards of Switzerland travel',     relevantFamilies: ['ashok','rajesh'] },
+  { category: 'before-travel', priority: 'high',   text: 'Set up international data plan for Switzerland',       relevantFamilies: ['ashok','rajesh'] },
+  { category: 'before-travel', priority: 'high',   text: 'Download SBB Mobile App (Swiss trains)',               relevantFamilies: ['ashok','rajesh'] },
+  { category: 'before-travel', priority: 'medium', text: 'Download MeteoSwiss App (mountain weather)',           relevantFamilies: ['ashok','rajesh'] },
+  { category: 'before-travel', priority: 'medium', text: 'Get some Swiss Francs (CHF) — ATMs available too',    relevantFamilies: ['ashok','rajesh'] },
+  { category: 'before-travel', priority: 'medium', text: 'Print / save hotel addresses and confirmation numbers offline', relevantFamilies: ['ashok','rajesh'] },
+
+  // ══════════════════════════════════
+  // AREAS TO EXPLORE / NOTES
+  // ══════════════════════════════════
+  { category: 'note', dayIndex: 4, text: 'Rifelsee Lake — Matterhorn reflection, best before 9 AM',             relevantFamilies: ['ashok','rajesh'] },
+  { category: 'note', dayIndex: 3, text: 'Grindelwald First — ask about Trottibike scooter downhill',           relevantFamilies: ['ashok','rajesh'] },
+  { category: 'note', dayIndex: 2, text: 'Lauterbrunnen — 72 waterfalls visible from the valley road',          relevantFamilies: ['ashok','rajesh'] },
+  { category: 'note', dayIndex: 6, text: 'Zürich Lindenhügel hill — panoramic city view, 10 min walk',         relevantFamilies: ['ashok','rajesh'] },
 ];
 
-// GET /api/seed/:token — trigger from browser
+// ── GET seed checklist ──
 router.get('/:token', async (req, res) => {
   if (req.params.token !== 'swiss2026-seed-now') return res.status(403).json({ error: 'Forbidden' });
   try {
@@ -50,16 +66,21 @@ router.get('/:token', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// POST /api/seed  — protected by a secret token
-router.post('/:token', async (req, res) => {
-  if (req.params.token !== 'swiss2026-seed-now') {
-    return res.status(403).json({ error: 'Forbidden' });
-  }
+// ── GET reseed checklist (wipe + redo) ──
+router.get('/reseed/:token', async (req, res) => {
+  if (req.params.token !== 'swiss2026-seed-now') return res.status(403).json({ error: 'Forbidden' });
+  try {
+    await ChecklistItem.deleteMany({});
+    await ChecklistItem.insertMany(DEFAULT_CHECKLIST);
+    res.json({ ok: true, reseeded: DEFAULT_CHECKLIST.length });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
 
+// ── POST seed (original) ──
+router.post('/:token', async (req, res) => {
+  if (req.params.token !== 'swiss2026-seed-now') return res.status(403).json({ error: 'Forbidden' });
   try {
     const results = {};
-
-    // Seed checklist
     const existingChecklist = await ChecklistItem.countDocuments();
     if (existingChecklist === 0) {
       await ChecklistItem.insertMany(DEFAULT_CHECKLIST);
@@ -67,39 +88,26 @@ router.post('/:token', async (req, res) => {
     } else {
       results.checklist = `Skipped — ${existingChecklist} items already exist`;
     }
-
     res.json({ ok: true, results });
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// DELETE /api/seed/:token — wipe and re-seed (use carefully)
+// ── DELETE reseed ──
 router.delete('/:token', async (req, res) => {
-  if (req.params.token !== 'swiss2026-seed-now') {
-    return res.status(403).json({ error: 'Forbidden' });
-  }
+  if (req.params.token !== 'swiss2026-seed-now') return res.status(403).json({ error: 'Forbidden' });
   try {
     await ChecklistItem.deleteMany({});
     await ChecklistItem.insertMany(DEFAULT_CHECKLIST);
     res.json({ ok: true, message: `Re-seeded ${DEFAULT_CHECKLIST.length} checklist items` });
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-module.exports = router;
-
-// GET /api/seed/members/:token — seed all 8 family members
+// ── GET seed members ──
 router.get('/members/:token', async (req, res) => {
-  if (req.params.token !== 'swiss2026-seed-now') {
-    return res.status(403).json({ error: 'Forbidden' });
-  }
+  if (req.params.token !== 'swiss2026-seed-now') return res.status(403).json({ error: 'Forbidden' });
   try {
     const existing = await Member.countDocuments();
-    if (existing > 0) {
-      return res.json({ ok: true, skipped: true, existing, message: 'Members already seeded. Use /reseed to force.' });
-    }
+    if (existing > 0) return res.json({ ok: true, skipped: true, existing });
     const created = [];
     for (const m of MEMBERS) {
       const member = await Member.create(m);
@@ -107,16 +115,12 @@ router.get('/members/:token', async (req, res) => {
       created.push(member.name);
     }
     res.json({ ok: true, seeded: created });
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// GET /api/seed/members-reseed/:token — wipe and re-seed members
+// ── GET reseed members ──
 router.get('/members-reseed/:token', async (req, res) => {
-  if (req.params.token !== 'swiss2026-seed-now') {
-    return res.status(403).json({ error: 'Forbidden' });
-  }
+  if (req.params.token !== 'swiss2026-seed-now') return res.status(403).json({ error: 'Forbidden' });
   try {
     await Member.deleteMany({});
     await TripState.deleteMany({});
@@ -127,7 +131,7 @@ router.get('/members-reseed/:token', async (req, res) => {
       created.push(member.name);
     }
     res.json({ ok: true, reseeded: created });
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
+
+module.exports = router;

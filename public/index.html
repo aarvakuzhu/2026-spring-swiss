@@ -1112,25 +1112,57 @@ function renderChecklist() {
     groups[g].push(item);
   });
 
-  const labels = { 'before-travel':'📋 Before You Travel', 'packing':'🧳 Packing', 'booking':'🎫 Bookings Needed', 'day-activity':'📅 Day-of Activities', 'note':'⭐ Areas to Explore / Notes' };
+  const labels = {
+    'before-travel': '📋 Before You Travel',
+    'packing':       '🛍 Things to Buy / Pack',
+    'booking':       '🎫 Bookings Needed',
+    'day-activity':  '📅 Day-of Activities',
+    'note':          '⭐ Areas to Explore',
+  };
+  const priorityOrder = { high: 0, medium: 1, low: 2 };
   let html = '';
+
+  // Show completion summary at top
+  const totalItems = checklistData.filter(i => i.category !== 'note').length;
+  const myDone = checklistData.filter(i => i.category !== 'note' && i.completions?.find(c => c.memberId === currentMember?._id)).length;
+  const pct = totalItems ? Math.round((myDone / totalItems) * 100) : 0;
+  html += `<div style="background:#F9F9F7;border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <span style="font-size:0.75rem;font-weight:600">Your progress</span>
+      <span style="font-size:0.75rem;color:var(--muted)">${myDone} / ${totalItems} done</span>
+    </div>
+    <div style="background:#E5E5E0;border-radius:4px;height:6px;overflow:hidden">
+      <div style="background:var(--member-color,#2563EB);height:100%;width:${pct}%;transition:width 0.4s;border-radius:4px"></div>
+    </div>
+  </div>`;
 
   Object.keys(labels).forEach(cat => {
     if (!groups[cat] || !groups[cat].length) return;
+    const sorted = [...groups[cat]].sort((a,b) => (priorityOrder[a.priority]||1) - (priorityOrder[b.priority]||1));
     html += `<div class="checklist-group"><div class="cg-label">${labels[cat]}</div>`;
-    groups[cat].forEach(item => {
+    sorted.forEach(item => {
       const myCompletion = item.completions && currentMember
         ? item.completions.find(c => c.memberId === currentMember._id)
         : null;
       const isDone = !!myCompletion;
-      const otherCheckers = item.completions ? item.completions.filter(c => c.memberId !== currentMember?._id).map(c => c.memberName) : [];
+      const otherCheckers = item.completions
+        ? item.completions.filter(c => c.memberId !== currentMember?._id).map(c => c.memberName)
+        : [];
+      const priorityDot = item.priority === 'high'
+        ? '<span style="width:7px;height:7px;border-radius:50%;background:#EF4444;display:inline-block;margin-right:5px;flex-shrink:0;margin-top:4px"></span>'
+        : item.priority === 'medium'
+        ? '<span style="width:7px;height:7px;border-radius:50%;background:#F59E0B;display:inline-block;margin-right:5px;flex-shrink:0;margin-top:4px"></span>'
+        : '<span style="width:7px;height:7px;border-radius:50%;background:#9CA3AF;display:inline-block;margin-right:5px;flex-shrink:0;margin-top:4px"></span>';
 
       html += `<div class="checklist-item ${isDone ? 'done' : ''}" id="ci-${item._id}">
         <div class="ci-check ${isDone ? 'checked' : ''}" onclick="toggleCheck('${item._id}')"></div>
         <div class="ci-body">
-          <div class="ci-text">${item.text}</div>
-          ${item.addedBy ? `<div class="ci-meta">Added by ${item.addedBy}</div>` : ''}
-          ${otherCheckers.length ? `<div class="ci-checkers">✓ Also done by: ${otherCheckers.join(', ')}</div>` : ''}
+          <div style="display:flex;align-items:flex-start">
+            ${priorityDot}
+            <span class="ci-text">${item.text}</span>
+          </div>
+          ${item.addedBy ? `<div class="ci-meta">💬 ${item.addedBy}</div>` : ''}
+          ${otherCheckers.length ? `<div class="ci-checkers">✓ Done by: ${otherCheckers.join(', ')}</div>` : ''}
           ${item.isBookingRequired && item.bookingUrl ? `<a href="${item.bookingUrl}" class="ci-book" target="_blank">🔗 Book now ↗</a>` : ''}
         </div>
       </div>`;
