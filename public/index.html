@@ -628,18 +628,18 @@ const DAYS = [
 const AIRPORT_NAMES = { ATL:'Atlanta', GVA:'Geneva', ZUR:'Zurich', AMS:'Amsterdam', YUL:'Montreal', IAD:'Washington DC', JFK:'New York JFK' };
 
 const TRIP_FLIGHTS = {
-  0:[
-    {fn:'UA8392',family:'ashok',from:'ATL',to:'YUL',dep:'12:55 PM',arr:'4:20 PM',airline:'United',booking:'LCQ7R4'},
-    {fn:'UA8390',family:'ashok',from:'YUL',to:'GVA',dep:'8:20 PM',arr:'9:55 AM+1',airline:'United',booking:'LCQ7R4'},
-    {fn:'DL9375',family:'rajesh',from:'ATL',to:'AMS',dep:'10:00 PM',arr:'1:30 PM+1',airline:'Delta'},
-    {fn:'DL9435',family:'rajesh',from:'AMS',to:'ZUR',dep:'~3:00 PM',arr:'~4:30 PM',airline:'Delta (connection)'},
+  0:[ // Apr 4 — sorted by departure time
+    {fn:'UA8392',family:'ashok', from:'ATL',to:'YUL',dep:'12:55 PM',arr:'4:20 PM',     airline:'United', booking:'LCQ7R4'},
+    {fn:'UA8390',family:'ashok', from:'YUL',to:'GVA',dep:'8:20 PM', arr:'9:55 AM+1',   airline:'United', booking:'LCQ7R4'},
+    {fn:'DL9375',family:'rajesh',from:'ATL',to:'AMS',dep:'10:00 PM',arr:'1:30 PM+1',   airline:'Delta'},
+    {fn:'DL9435',family:'rajesh',from:'AMS',to:'ZUR',dep:'Next day',arr:'~4:30 PM+1',  airline:'Delta (connection)'},
   ],
-  7:[
-    {fn:'UA749', family:'ashok',from:'GVA',to:'IAD',dep:'11:00 AM',arr:'~2:30 PM',airline:'United',booking:'LCQ7R4'},
-    {fn:'UA1635',family:'ashok',from:'IAD',to:'ATL',dep:'10:08 AM EST',arr:'~12:00 PM',airline:'United',booking:'LCQ7R4'},
-    {fn:'DL9244',family:'rajesh',from:'ZUR',to:'AMS',dep:'2:00 PM',arr:'~3:45 PM',airline:'Delta'},
-    {fn:'DL9358',family:'rajesh',from:'AMS',to:'JFK',dep:'~5:30 PM',arr:'~8:00 PM',airline:'Delta'},
-    {fn:'DL2245',family:'rajesh',from:'JFK',to:'ATL',dep:'~9:30 PM',arr:'~11:59 PM',airline:'Delta'},
+  7:[ // Apr 11 — sorted by departure time (local)
+    {fn:'UA749', family:'ashok', from:'GVA',to:'IAD',dep:'11:00 AM',arr:'~2:30 PM EST',airline:'United', booking:'LCQ7R4'},
+    {fn:'UA1635',family:'ashok', from:'IAD',to:'ATL',dep:'10:08 AM EST',arr:'~12:00 PM',airline:'United',booking:'LCQ7R4'},
+    {fn:'DL9244',family:'rajesh',from:'ZUR',to:'AMS',dep:'2:00 PM', arr:'~3:45 PM',    airline:'Delta'},
+    {fn:'DL9358',family:'rajesh',from:'AMS',to:'JFK',dep:'~5:30 PM',arr:'~8:00 PM EST',airline:'Delta'},
+    {fn:'DL2245',family:'rajesh',from:'JFK',to:'ATL',dep:'~9:30 PM',arr:'~11:59 PM',   airline:'Delta'},
   ],
 };
 
@@ -961,9 +961,9 @@ async function renderItinerary() {
 async function buildFlightSection(dayIndex) {
   const flights = TRIP_FLIGHTS[dayIndex];
   const myFam = currentMember?.family;
-  const sorted = [...flights].sort((a,b) => a.family===myFam?-1:b.family===myFam?1:0);
+  // Keep flights in chronological order (as defined in TRIP_FLIGHTS)
   let html = `<div class="sec-label">✈️ Flights</div>`;
-  for (const f of sorted) {
+  for (const f of flights) {
     html += await buildFlightCard(f);
   }
   // Airport advisory
@@ -1461,31 +1461,32 @@ async function doSearch() {
   searchHistory = [q, ...searchHistory.filter(x=>x!==q)].slice(0,8);
   try { localStorage.setItem('swissSearch', JSON.stringify(searchHistory)); } catch(e){}
 
-  const loc = DAYS[currentDay].location;
-  const context = `Currently viewing: ${loc} (${DAYS[currentDay].date}). Member: ${currentMember?.name||'unknown'}.`;
-
-  document.getElementById('searchResults').innerHTML = `
-    <div class="search-loading">
-      <div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>
-      <span class="search-loading-text">Searching for "${q}"…</span>
-    </div>`;
+  document.getElementById('searchResults').innerHTML =
+    '<div class="search-loading"><div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div><span class="search-loading-text">Searching…</span></div>';
 
   try {
     const r = await fetch('/api/search', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({query: q, context})
+      body: JSON.stringify({ query: q, dayIndex: currentDay })
     });
     const data = await r.json();
-    const reply = data.reply || (data.error ? `⚠️ ${data.detail||data.error}` : 'No results — try rephrasing');
+    const raw = data.reply || (data.error ? '⚠️ ' + (data.detail||data.error) : 'No results — try rephrasing');
 
-    document.getElementById('searchResults').innerHTML = `
-      <div class="search-result">${reply.replace(/\n/g,'\n')}</div>
-      <div style="text-align:center;margin-top:10px">
-        <button class="search-chip" onclick="doSearch()" style="background:var(--card)">↻ Search again</button>
-      </div>`;
+    // Basic markdown-style rendering
+      const html = raw
+        .replace(/[*][*](.+?)[*][*]/g, '<strong>$1</strong>')
+        .replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '<a href="$2" target="_blank" style="color:var(--mc);font-weight:600">$1 ↗</a>')
+        .replace(/\n---\n/g, '<hr style="margin:10px 0;border:none;border-top:1px solid var(--line)">')
+        .replace(/\n/g, '<br>');
+
+    document.getElementById('searchResults').innerHTML =
+      '<div class="search-result">' + html + '</div>' +
+      '<div style="text-align:center;margin-top:10px">' +
+        '<button class="search-chip" onclick="document.getElementById(\'searchInput\').focus()" style="background:var(--card)">🔍 New search</button>' +
+      '</div>';
   } catch(e) {
-    document.getElementById('searchResults').innerHTML = `<div class="search-result">⚠️ Search unavailable — check connection</div>`;
+    document.getElementById('searchResults').innerHTML = '<div class="search-result">⚠️ Search unavailable — check connection</div>';
   }
 }
 
