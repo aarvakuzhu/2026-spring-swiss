@@ -1390,6 +1390,7 @@ const QUICK_SEARCHES = [
 
 function renderSearch() {
   const loc = DAYS[currentDay].location.split('·')[0].trim();
+  const dayLabel = DAYS[currentDay].short;
   let html = `<div class="search-bar-wrap">
     <div class="search-bar" id="searchBar">
       <span class="search-icon">🔍</span>

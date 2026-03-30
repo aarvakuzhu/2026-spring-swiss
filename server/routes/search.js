@@ -221,19 +221,37 @@ router.post('/', async (req, res) => {
     });
   }
 
-  // Generic fallback — if it sounds like food, show the location anyway
-  if (data) {
-    const filtered = filterPlaces(data.places, query);
-    const showing = filtered.slice(0, 6);
-    let reply = `📍 **Suggestions near ${data.title}**\n\n`;
-    showing.forEach((p, i) => {
-      reply += `**${i + 1}. ${p.name}** — ${p.type} · ${p.price}\n${p.note}\n${p.maps ? `[📍 Maps](${p.maps})\n` : ''}\n`;
-    });
-    return res.json({ reply, links: deepLinks });
+  // Food query but no restaurant data for this exact day — find nearest day with data
+  if (isFoodQuery(q)) {
+    // Find closest day with restaurant data, preferring current or future days
+    const daysWithData = [1, 2, 3, 4, 5, 6];
+    const bestDay = daysWithData.reduce((best, d) => {
+      return Math.abs(d - dayIndex) < Math.abs(best - dayIndex) ? d : best;
+    }, daysWithData[0]);
+    const bestData = RESTAURANTS[bestDay];
+
+    if (bestData) {
+      const filtered = filterPlaces(bestData.places, query);
+      const showing = filtered.slice(0, 10);
+      let reply = `🍽 **${showing.length} places near ${bestData.title}**\n`;
+      reply += `🏨 Your hotel: ${bestData.hotels}\n\n`;
+      showing.forEach((p, i) => {
+        reply += `**${i + 1}. ${p.name}** ${p.kids ? '👨\u200d👩\u200d👧' : ''}\n`;
+        reply += `${p.type} · ${p.price}\n`;
+        reply += `${p.note}\n`;
+        if (p.book) reply += `📞 Book ahead recommended\n`;
+        if (p.maps) reply += `[📍 Maps](${p.maps})\n`;
+        reply += '\n';
+      });
+      reply += `---\n⏰ **Hours**: Lunch 12:00–14:00 · Dinner 18:30–21:30\n💡 Kitchens close sharp — don't arrive late!`;
+      return res.json({ reply, links: deepLinks });
+    }
   }
 
+  // Generic fallback with suggestions
+  const allLocations = Object.values(RESTAURANTS).map(d => d.title.split('&')[0].trim()).join(', ');
   res.json({
-    reply: `🔍 Try searching: "restaurants Apr 8", "Indian food Zermatt", "fondue tonight", "cheap dinner Grindelwald", "train times"`,
+    reply: `🔍 **Search tips** — try:\n• "restaurants apr 8" or "restaurants zermatt"\n• "indian food grindelwald"\n• "fondue tonight"\n• "cheap dinner lucerne"\n• "train times"\n• "what time do restaurants open"\n\nLocations with curated picks: ${allLocations}`,
     links: deepLinks
   });
 });
