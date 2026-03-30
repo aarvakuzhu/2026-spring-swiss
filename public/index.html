@@ -569,61 +569,153 @@ const DAYS = [
 function getPersonalTips(member, dayIndex) {
   const interests = member.interests || [];
   const isKid = member.role === 'kid';
-  const day = DAYS[dayIndex];
+  const isFemale = member.gender === 'female';
+  const name = member.name;
   const tips = [];
 
-  if (isKid) {
-    const kidTips = {
-      2: ['🎬 Spot where James Bond skied at Piz Gloria!', '❄️ Bring gloves — it\'s snowy at the top even in April'],
-      3: ['🛷 Ask about the Trottibike scooters down from First!', '🦅 Look for Alpine choughs (black birds) near the cliff walk'],
-      4: ['🏔 Klein Matterhorn = world\'s highest cable car you\'ve ever been on!', '📸 The Matterhorn reflection in Rifelsee looks like a painting'],
-      5: ['🚢 You can steer the boat if you ask nicely!', '🦢 Look for swans on Lake Lucerne'],
-      6: ['🍫 The Lindt museum has the world\'s biggest chocolate fountain!', '⚽ FIFA museum has boots from Messi & Ronaldo'],
-    };
-    if (kidTips[dayIndex]) tips.push(...kidTips[dayIndex]);
+  // ── Per-name personalization ──
+  const nameTips = {
+    'Ashok': {
+      0: ['📋 You planned this — now enjoy it! Trip logistics are locked in ✓'],
+      1: ['🚂 GoldenPass Express is one of the world's most scenic train rides — grab a window seat'],
+      2: ['🎯 First tram at 8 AM gets you Schilthorn before the crowds'],
+      4: ['📍 Budget 30 min for Gorner Gorge — it's free and dramatic'],
+    },
+    'KP': {
+      1: ['🌸 Interlaken Höhematte park — wildflowers in April, beautiful to photograph'],
+      2: ['📸 Mürren village en route to Schilthorn is incredibly photogenic — don't rush through'],
+      4: ['💐 Zermatt has beautiful alpine gardens near the cemetery trail'],
+      5: ['🛍 Lucerne old town has lovely Swiss craft shops along the river'],
+      6: ['🏙 Zurich Bahnhofstrasse — window shopping at its most elegant'],
+    },
+    'Abhi': {
+      0: ['🌟 Switzerland has actual James Bond villain lairs — you'll see one on Day 3!'],
+      2: ['🕵️ At Piz Gloria: find the exact spot where Bond skied off the edge. It's real.'],
+      3: ['🛷 Trottibike scooters at Grindelwald First — fastest way down a mountain legally'],
+      4: ['⛷ Klein Matterhorn has a snow park — ask Dad if there's time to play'],
+      5: ['⚽ Ask at the FIFA museum if you can try the penalty shootout simulator'],
+      6: ['🍫 Lindt museum: unlimited chocolate tasting at the fountain. No, really.'],
+    },
+    'Adhar': {
+      0: ['🚂 Swiss trains have double-decker cars — always go upstairs for the best views'],
+      2: ['❄️ There's real snow at Schilthorn — first snowball fight of the trip!'],
+      3: ['🦅 Spot eagles and Alpine choughs (black mountain birds) from the Cliff Walk'],
+      4: ['🏔 The cable car to Klein Matterhorn goes so high your ears pop — coolest feeling'],
+      5: ['🦢 Count how many swans you can spot on Lake Lucerne from the boat'],
+      6: ['🎮 FIFA museum has interactive games — way better than just looking at trophies'],
+    },
+    'Rajesh': {
+      1: ['🗺 Interlaken tourist office has free trail maps — worth picking up on arrival'],
+      3: ['🥾 Grindelwald First to Bachalpsee is a genuine hiker's trail if you have energy'],
+      4: ['📜 Zermatt's Mountaineers' Cemetery has headstones of famous climbers — sobering & worth 10 min'],
+      6: ['🏛 Swiss National Museum is free with Travel Pass — genuinely world-class exhibits'],
+    },
+    'Anitha': {
+      1: ['🍽 Alpenrose hotel breakfast is Swiss-style — try the local cheese and Birchermüesli'],
+      3: ['🧀 Grindelwald: Restaurant Adler does the best Käseschnitzel (cheese schnitzel) in the valley'],
+      5: ['🐟 Wirtshaus Galliker in Lucerne — authentic Swiss grandmother cooking since 1856'],
+      6: ['☕ Café Sprüngli at Paradeplatz: the best hot chocolate in Zurich, non-negotiable'],
+    },
+    'Rajitha': {
+      1: ['🎨 Interlaken has a small gallery district near the west station — worth a peek'],
+      2: ['🖼 The light on Schilthorn at golden hour is like a Caspar David Friedrich painting'],
+      3: ['✏️ Grindelwald village has great street art and painted chalets — bring your sketchbook'],
+      5: ['🏛 Rosengart Collection in Lucerne: Picasso and Klee — genuinely beautiful, not touristy'],
+      6: ['🎨 Kunsthaus Zürich has one of the best Impressionist collections in Europe'],
+    },
+    'Rashmitha': {
+      1: ['🌸 Swiss wildflowers in April: edelweiss, gentians, alpine roses — nature's origami'],
+      2: ['❄️ Catch snowflakes at Schilthorn summit — each one really is a unique pattern!'],
+      3: ['🦋 Grindelwald meadows in spring have incredible wildflower patterns — explore slowly'],
+      5: ['🦢 Lucerne swans are so tame they eat from your hand near the Chapel Bridge'],
+      6: ['🍫 At Lindt museum: the chocolate wrapping room shows origami-style foil folding'],
+    },
+  };
+
+  if (nameTips[name] && nameTips[name][dayIndex]) {
+    tips.push(...nameTips[name][dayIndex]);
   }
 
-  if (interests.includes('photography')) {
+  // ── Interest-based tips ──
+  if (interests.includes('photography') || interests.includes('scenic views')) {
     const photoTips = {
-      2: ['📸 Golden hour at Schilthorn: 7–8 AM for soft light on peaks'],
-      4: ['📸 Rifelsee Lake: arrive early — reflection disappears when wind picks up', '📸 Matterhorn from Zermatt village: best from the cemetery trail'],
-      5: ['📸 Chapel Bridge from the riverside — use wide angle for the flowers'],
-      6: ['📸 Zurich old town from Lindenhügel hill — panoramic city shot'],
+      2: ['📸 Schilthorn: shoot through the rotating restaurant glass for a unique frame'],
+      4: ['📸 Rifelsee Lake reflection: arrive by 9 AM before wind ripples the water'],
+      5: ['📸 Chapel Bridge flowers in April — shoot from the riverbank looking east'],
+      6: ['📸 Zurich panorama: Lindenhügel hill, 10 min walk from old town'],
     };
     if (photoTips[dayIndex]) tips.push(...photoTips[dayIndex]);
   }
 
+  if (interests.includes('art')) {
+    const artTips = {
+      5: ['🎨 Rosengart Collection — Picasso & Klee in a beautiful intimate space'],
+      6: ['🖼 Kunsthaus Zürich — Monet, Munch, Giacometti, all in one building'],
+    };
+    if (artTips[dayIndex]) tips.push(...artTips[dayIndex]);
+  }
+
+  if (interests.includes('origami') || interests.includes('crafts')) {
+    const craftTips = {
+      1: ['✂️ Interlaken has a paper craft shop near the main street — look out for it'],
+      3: ['🌿 Collect pressed Alpine flowers from Grindelwald meadows for craft projects'],
+      6: ['🍫 Lindt museum foil-wrapping demo has satisfying origami-style folding'],
+    };
+    if (craftTips[dayIndex]) tips.push(...craftTips[dayIndex]);
+  }
+
   if (interests.includes('food')) {
     const foodTips = {
-      1: ['🍽 Try Rösti (Swiss hash brown) for breakfast in Wilderswil'],
-      3: ['🧀 Grindelwald has excellent fondue — book Restaurant Adler for dinner'],
-      4: ['🍫 Zermatt village: try Biner chocolate shop for Matterhorn-shaped pralines'],
-      5: ['🐟 Lake fish is excellent in Lucerne — try Restaurant Schiff by the water'],
-      6: ['🥨 Zürich has amazing bakeries in Niederdorf — grab a Gipfeli (croissant)'],
+      1: ['🧀 Try Rösti (Swiss potato cake) for breakfast — Wilderswil cafés do it perfectly'],
+      3: ['🫕 Grindelwald: cheese fondue at Restaurant Adler — book ahead!'],
+      4: ['🍫 Zermatt: Biner chocolate shop has Matterhorn-shaped pralines'],
+      5: ['🐟 Restaurant Schiff on the Lucerne riverbank — fresh lake perch'],
+      6: ['🥐 Niederdorf bakeries open by 7 AM — best Gipfeli (croissant) in Switzerland'],
     };
     if (foodTips[dayIndex]) tips.push(...foodTips[dayIndex]);
   }
 
   if (interests.includes('hiking')) {
     const hikingTips = {
-      3: ['🥾 Cliff Walk extension: continue to Bachalpsee lake (~2h round trip)', '🥾 Download Swisstopo app for offline trail maps'],
-      4: ['🥾 Gorner Gorge walk from Zermatt — dramatic ice-carved canyon (free)'],
-      5: ['🥾 Mt Pilatus hike starts from Lucerne if you have extra energy'],
+      3: ['🥾 Cliff Walk → Bachalpsee extension: 2h round trip, stunning lake at the end'],
+      4: ['🥾 Gorner Gorge from Zermatt: free, dramatic ice-carved canyon, 45 min walk'],
+      5: ['🥾 Mt Pilatus day hike possible from Lucerne if energy allows'],
     };
     if (hikingTips[dayIndex]) tips.push(...hikingTips[dayIndex]);
   }
 
   if (interests.includes('history') || interests.includes('museums')) {
     const historyTips = {
-      2: ['🏛 007 Bond Museum is small but fascinating — free with cable car ticket'],
-      5: ['🏛 Old Town Lucerne: the city walls date back to 1386'],
-      6: ['🏛 Swiss National Museum: free entry with Swiss Travel Pass!'],
+      2: ['🏛 007 Bond Museum at Piz Gloria — free with cable car, surprisingly detailed'],
+      4: ['⛏ Zermatt Mountaineers' Cemetery — headstones tell incredible stories of the Alps'],
+      5: ['🏰 Lucerne's medieval walls and towers date to 1386 — walk the ramparts'],
+      6: ['🏛 Swiss National Museum: free with Travel Pass, genuinely world-class'],
     };
     if (historyTips[dayIndex]) tips.push(...historyTips[dayIndex]);
   }
 
+  if (interests.includes('sports') || interests.includes('games') || interests.includes('fun')) {
+    const funTips = {
+      2: ['🎿 Schilthorn has a mini snow park area — ask the lifties what's open'],
+      3: ['🛷 Trottibike downhill scooter from First — one of the most fun things in the Alps'],
+      4: ['⛷ Klein Matterhorn glacier has a snow park even in April'],
+      6: ['⚽ FIFA museum penalty shootout simulator — beat Rajesh's score'],
+    };
+    if (funTips[dayIndex]) tips.push(...funTips[dayIndex]);
+  }
+
+  if (interests.includes('star wars') || interests.includes('lego')) {
+    const swTips = {
+      2: ['🌌 Schilthorn looks EXACTLY like Hoth from Empire Strikes Back. Document it.'],
+      3: ['⚔️ The Eiger north face looks like a Star Destroyer from below — look up!'],
+      4: ['🏔 Matterhorn = if the Swiss made a Death Star, it would be this shape'],
+    };
+    if (swTips[dayIndex]) tips.push(...swTips[dayIndex]);
+  }
+
   return tips;
 }
+
 
 // ══════════════════════════════════
 // MEMBER SELECTION

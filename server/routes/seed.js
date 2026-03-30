@@ -2,6 +2,7 @@ const router = require('express').Router();
 const ChecklistItem = require('../models/ChecklistItem');
 const Member = require('../models/Member');
 const TripState = require('../models/TripState');
+const MEMBERS = require('../seedMembers');
 
 const DEFAULT_CHECKLIST = [
   // ── BEFORE TRAVEL ──
@@ -88,3 +89,45 @@ router.delete('/:token', async (req, res) => {
 });
 
 module.exports = router;
+
+// GET /api/seed/members/:token — seed all 8 family members
+router.get('/members/:token', async (req, res) => {
+  if (req.params.token !== 'swiss2026-seed-now') {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+  try {
+    const existing = await Member.countDocuments();
+    if (existing > 0) {
+      return res.json({ ok: true, skipped: true, existing, message: 'Members already seeded. Use /reseed to force.' });
+    }
+    const created = [];
+    for (const m of MEMBERS) {
+      const member = await Member.create(m);
+      await TripState.create({ memberId: member._id, memberName: member.name, family: member.family });
+      created.push(member.name);
+    }
+    res.json({ ok: true, seeded: created });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// GET /api/seed/members-reseed/:token — wipe and re-seed members
+router.get('/members-reseed/:token', async (req, res) => {
+  if (req.params.token !== 'swiss2026-seed-now') {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+  try {
+    await Member.deleteMany({});
+    await TripState.deleteMany({});
+    const created = [];
+    for (const m of MEMBERS) {
+      const member = await Member.create(m);
+      await TripState.create({ memberId: member._id, memberName: member.name, family: member.family });
+      created.push(member.name);
+    }
+    res.json({ ok: true, reseeded: created });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
