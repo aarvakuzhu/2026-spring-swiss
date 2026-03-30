@@ -275,6 +275,85 @@ body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(
 .legend { display: flex; gap: 14px; padding: 10px 16px; border-top: 1px solid var(--line); font-size: 0.66rem; color: var(--muted); justify-content: center; flex-wrap: wrap; }
 .legend span { display: flex; align-items: center; gap: 4px; }
 .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── AI CHAT ── */
+.chat-fab {
+  position: fixed; bottom: 24px; right: 16px; z-index: 500;
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--member-color, #2563EB);
+  border: none; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; transition: transform 0.2s;
+}
+.chat-fab:active { transform: scale(0.93); }
+.chat-fab.hidden { display: none; }
+
+.chat-drawer {
+  position: fixed; bottom: 0; left: 0; right: 0; max-width: 480px; margin: 0 auto;
+  height: 75vh; background: white; border-radius: 20px 20px 0 0;
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.18); z-index: 600;
+  display: flex; flex-direction: column;
+  transform: translateY(100%); transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+}
+.chat-drawer.open { transform: translateY(0); }
+
+.chat-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px 10px; border-bottom: 1px solid var(--line); flex-shrink: 0;
+}
+.chat-header-left { display: flex; align-items: center; gap: 10px; }
+.chat-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--member-color, #2563EB); display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+.chat-title { font-weight: 600; font-size: 0.88rem; }
+.chat-subtitle { font-size: 0.65rem; color: var(--muted); }
+.chat-close { background: none; border: none; font-size: 1.3rem; cursor: pointer; color: var(--muted); padding: 4px 8px; }
+
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px;
+  scroll-behavior: smooth;
+}
+.chat-msg { display: flex; gap: 8px; max-width: 90%; }
+.chat-msg.user { align-self: flex-end; flex-direction: row-reverse; }
+.chat-msg.assistant { align-self: flex-start; }
+.chat-bubble {
+  padding: 9px 13px; border-radius: 14px; font-size: 0.82rem; line-height: 1.5;
+  white-space: pre-wrap;
+}
+.chat-msg.user .chat-bubble { background: var(--member-color, #2563EB); color: white; border-radius: 14px 14px 4px 14px; }
+.chat-msg.assistant .chat-bubble { background: #F3F3EF; color: var(--ink); border-radius: 14px 14px 14px 4px; }
+.chat-msg-avatar { width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; background: #E5E5E0; margin-top: 2px; }
+
+.chat-suggestions { display: flex; gap: 6px; overflow-x: auto; padding: 8px 14px 0; scrollbar-width: none; flex-shrink: 0; }
+.chat-suggestions::-webkit-scrollbar { display: none; }
+.chat-suggestion {
+  flex: 0 0 auto; padding: 6px 12px; background: #F0F0EC; border: 1px solid var(--line);
+  border-radius: 16px; font-size: 0.7rem; cursor: pointer; font-family: 'DM Sans', sans-serif;
+  color: var(--ink); white-space: nowrap; transition: background 0.15s;
+}
+.chat-suggestion:active { background: var(--member-color, #2563EB); color: white; border-color: var(--member-color, #2563EB); }
+
+.chat-input-row {
+  display: flex; gap: 8px; padding: 10px 14px 16px; border-top: 1px solid var(--line); flex-shrink: 0;
+}
+.chat-input {
+  flex: 1; padding: 10px 14px; border: 1px solid var(--line); border-radius: 22px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.82rem; color: var(--ink);
+  background: #F9F9F7; outline: none;
+}
+.chat-input:focus { border-color: var(--member-color, #2563EB); }
+.chat-send {
+  width: 40px; height: 40px; border-radius: 50%; background: var(--member-color, #2563EB);
+  border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0; transition: opacity 0.15s;
+}
+.chat-send:disabled { opacity: 0.4; }
+
+.chat-typing { display: flex; gap: 4px; align-items: center; padding: 10px 14px; }
+.typing-dot { width: 7px; height: 7px; border-radius: 50%; background: #ccc; animation: bounce 1.2s infinite; }
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
+.chat-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 599; display: none; }
+.chat-overlay.open { display: block; }
 </style>
 </head>
 <body>
@@ -1168,6 +1247,164 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
+
+// ══════════════════════════════════
+// AI CHAT
+// ══════════════════════════════════
+let chatHistory = [];
+let chatOpen = false;
+
+function buildSystemPrompt() {
+  const m = currentMember;
+  const dayName = DAYS[currentDay]?.date || 'Day ' + currentDay;
+  const dayLocation = DAYS[currentDay]?.location || '';
+  const memberCtx = m
+    ? `The user is ${m.name}, age ${m.age}, ${m.role}, from the ${m.family} family. Their interests: ${(m.interests||[]).join(', ')}.`
+    : 'The user is a trip participant.';
+
+  return `You are a warm, knowledgeable Switzerland trip assistant for a family vacation from Atlanta, Georgia, April 4–12, 2026.
+
+TWO FAMILIES TRAVELING TOGETHER:
+- Ashok family: Ashok (45M), KP (38F), Abhi (13M - sports/Star Wars/games), Adhar (11M - Star Wars/Fortnite)
+- Rajesh family: Rajesh (47M), Anitha (47F), Rajitha (17F - art/museums), Rashmitha (14F - origami/crafts)
+
+ITINERARY SUMMARY:
+- Apr 4: Fly out. Ashok: ATL→YUL→GVA (UA8392). Rajesh: ATL→AMS→ZUR (KLM)
+- Apr 5: Arrive & converge in Wilderswil. Ashok via GoldenPass Express Geneva→Interlaken. Rajesh via Zurich. Hotel: Alpenrose Hotel, Wilderswil
+- Apr 6: Schilthorn day. Thrill Walk at Birg, Piz Gloria (007 museum), Staubbach Falls. Back to Alpenrose
+- Apr 7: Grindelwald. First Cliff Walk. Check in AlpinHotel Bort (last gondola 3:34 PM!)
+- Apr 8: Zermatt. Klein Matterhorn (Glacier Paradise), Toblerone view, Rifelsee lake. Hotel Mountime, Tasch
+- Apr 9: Lucerne. Chapel Bridge, evening boat ride. Holiday Inn Express Kriens
+- Apr 10: Zurich. Swiss National Museum, Old Town, FIFA Museum, Boat ride, Lindt Museum. Holiday Inn Rümlang. Ashok family heads to Geneva airport hotel
+- Apr 11: Fly home. Ashok: GVA→IAD→ATL (UA749 11AM). Rajesh: ZUR→AMS→ATL (KLM 2PM)
+
+KEY LOGISTICS:
+- Swiss Travel Pass covers SBB trains, boats, many cable cars and museums
+- GoldenPass Express needs separate seat reservation
+- AlpinHotel Bort: last gondola UP is 3:34 PM — critical!
+- Zermatt is car-free; stay in Tasch, train to Zermatt (~12 min)
+- CHF is the currency; cards widely accepted but have some cash
+- Switzerland uses Type J power plugs (3-pin)
+- SBB Mobile app essential for live train times
+- MeteoSwiss app for accurate mountain weather
+
+CURRENT CONTEXT: The user is currently viewing ${dayName} (${dayLocation}).
+${memberCtx}
+
+Be concise, friendly, and practical. Tailor advice to the member's age and interests when relevant. For kids, make it fun and engaging. Use emojis sparingly. Answer in 2-4 sentences unless a longer answer is clearly needed.`;
+}
+
+function openChat() {
+  chatOpen = true;
+  document.getElementById('chatDrawer').classList.add('open');
+  document.getElementById('chatOverlay').classList.add('open');
+  document.getElementById('chatFab').style.display = 'none';
+  // Personalize welcome
+  if (currentMember) {
+    const greet = currentMember.role === 'kid'
+      ? `Hey ${currentMember.name}! 🎉 Ask me anything about the trip — what's on your mind?`
+      : `Hi ${currentMember.name}! Ask me anything about the Switzerland trip — itinerary, trains, what to pack, local tips, or anything else.`;
+    document.getElementById('welcomeMsg').textContent = greet;
+    document.getElementById('chatSubtitle').textContent = `Viewing: ${DAYS[currentDay]?.date || ''}`;
+  }
+  setTimeout(() => document.getElementById('chatInput').focus(), 300);
+}
+
+function closeChat() {
+  chatOpen = false;
+  document.getElementById('chatDrawer').classList.remove('open');
+  document.getElementById('chatOverlay').classList.remove('open');
+  document.getElementById('chatFab').style.display = 'flex';
+}
+
+function sendSuggestion(btn) {
+  const text = btn.textContent;
+  document.getElementById('chatSuggestions').style.display = 'none';
+  sendChat(text);
+}
+
+function appendMessage(role, text) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + role;
+  const avatarDiv = document.createElement('div');
+  avatarDiv.className = 'chat-msg-avatar';
+  avatarDiv.textContent = role === 'user' ? (currentMember?.avatar || '👤') : '🇨🇭';
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble';
+  bubble.textContent = text;
+  div.appendChild(avatarDiv);
+  div.appendChild(bubble);
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return bubble;
+}
+
+function showTyping() {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg assistant';
+  div.id = 'typingIndicator';
+  div.innerHTML = '<div class="chat-msg-avatar">🇨🇭</div><div class="chat-bubble chat-typing"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function removeTyping() {
+  const el = document.getElementById('typingIndicator');
+  if (el) el.remove();
+}
+
+async function sendChat(overrideText) {
+  const input = document.getElementById('chatInput');
+  const text = overrideText || input.value.trim();
+  if (!text) return;
+
+  input.value = '';
+  document.getElementById('chatSendBtn').disabled = true;
+
+  appendMessage('user', text);
+  chatHistory.push({ role: 'user', content: text });
+  showTyping();
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: buildSystemPrompt(),
+        messages: chatHistory,
+      })
+    });
+
+    const data = await response.json();
+    removeTyping();
+
+    const reply = data.content?.[0]?.text || 'Sorry, I could not get a response. Try again!';
+    appendMessage('assistant', reply);
+    chatHistory.push({ role: 'assistant', content: reply });
+
+    // Keep history manageable
+    if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
+
+  } catch (e) {
+    removeTyping();
+    appendMessage('assistant', 'Connection issue — check your internet and try again.');
+  }
+
+  document.getElementById('chatSendBtn').disabled = false;
+  document.getElementById('chatInput').focus();
+}
+
+// Show FAB once member is selected
+const _origSelectMember = selectMember;
+selectMember = async function(id) {
+  await _origSelectMember(id);
+  document.getElementById('chatFab').classList.remove('hidden');
+};
+
 // ══════════════════════════════════
 // INIT
 // ══════════════════════════════════
@@ -1179,6 +1416,48 @@ const today = new Date();
 const diff = Math.floor((today - tripStart) / 86400000);
 if (diff >= 0 && diff <= 7) currentDay = diff;
 </script>
+
+<!-- ── AI CHAT ── -->
+<div class="chat-overlay" id="chatOverlay" onclick="closeChat()"></div>
+
+<button class="chat-fab hidden" id="chatFab" onclick="openChat()">🤖</button>
+
+<div class="chat-drawer" id="chatDrawer">
+  <div class="chat-header">
+    <div class="chat-header-left">
+      <div class="chat-avatar" id="chatAvatar">🤖</div>
+      <div>
+        <div class="chat-title">Trip Assistant</div>
+        <div class="chat-subtitle" id="chatSubtitle">Ask anything about your Switzerland trip</div>
+      </div>
+    </div>
+    <button class="chat-close" onclick="closeChat()">✕</button>
+  </div>
+
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-msg assistant">
+      <div class="chat-msg-avatar">🇨🇭</div>
+      <div class="chat-bubble" id="welcomeMsg">Hi! I'm your Switzerland trip assistant. Ask me anything about the itinerary, train connections, what to pack, local food, or anything else about the trip!</div>
+    </div>
+  </div>
+
+  <div class="chat-suggestions" id="chatSuggestions">
+    <button class="chat-suggestion" onclick="sendSuggestion(this)">What should I pack for Schilthorn?</button>
+    <button class="chat-suggestion" onclick="sendSuggestion(this)">Best food to try in Switzerland?</button>
+    <button class="chat-suggestion" onclick="sendSuggestion(this)">How does the Swiss Travel Pass work?</button>
+    <button class="chat-suggestion" onclick="sendSuggestion(this)">What if it rains at the Matterhorn?</button>
+    <button class="chat-suggestion" onclick="sendSuggestion(this)">Fun facts about the Alps for kids</button>
+    <button class="chat-suggestion" onclick="sendSuggestion(this)">Tips for the Grindelwald Cliff Walk</button>
+    <button class="chat-suggestion" onclick="sendSuggestion(this)">How much spending money do we need?</button>
+    <button class="chat-suggestion" onclick="sendSuggestion(this)">What language do they speak in Zermatt?</button>
+  </div>
+
+  <div class="chat-input-row">
+    <input class="chat-input" id="chatInput" type="text" placeholder="Ask about the trip…" onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="chat-send" id="chatSendBtn" onclick="sendChat()">➤</button>
+  </div>
+</div>
+
 </body>
 </html>
 <!-- v1774834465 -->
