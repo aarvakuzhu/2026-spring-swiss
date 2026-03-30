@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Diag</title></head>
+<body style="font-family:monospace;padding:20px;background:#111;color:#0f0">
+<h2>Member Load Test</h2>
+<pre id="out">Fetching /api/members...</pre>
+<script>
+fetch('/api/members')
+  .then(r => r.json())
+  .then(data => {
+    document.getElementById('out').textContent = 
+      'SUCCESS — ' + data.length + ' members:\n\n' +
+      data.map(m => m.name + ' (' + m.family + ', ' + m.role + ')').join('\n');
+  })
+  .catch(e => {
+    document.getElementById('out').textContent = 'ERROR: ' + e.message;
+  });
+</script>
+</body>
+</html>
