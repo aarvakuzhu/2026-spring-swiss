@@ -3,8 +3,11 @@ const router = require('express').Router();
 const FLIGHTS = {
   'UA8392': { label: 'Ashok family outbound', date: '2026-04-04', from: 'ATL', to: 'GVA', via: 'YUL', dep: '13:05', arr: '09:55+1', airline: 'United' },
   'UA749':  { label: 'Ashok family return',   date: '2026-04-11', from: 'GVA', to: 'ATL', via: 'IAD', dep: '11:00', arr: '18:30', airline: 'United' },
-  'KL0622': { label: 'Rajesh family outbound', date: '2026-04-04', from: 'ATL', to: 'AMS', dep: '22:00', arr: '13:30+1', airline: 'KLM' },
-  'KL0621': { label: 'Rajesh family return',   date: '2026-04-11', from: 'ZUR', to: 'ATL', via: 'AMS', dep: '14:00', arr: '23:59', airline: 'KLM' },
+  'DL9375': { label: 'Rajesh family outbound (1/3)', date: '2026-04-04', from: 'ATL', to: 'AMS', dep: '22:00', arr: '13:30+1', airline: 'Delta' },
+  'DL9435': { label: 'Rajesh family outbound (2/3)', date: '2026-04-05', from: 'AMS', to: 'ZUR', dep: '15:00', arr: '16:30',   airline: 'Delta' },
+  'DL9244': { label: 'Rajesh family return (1/3)', date: '2026-04-11', from: 'ZUR', to: 'AMS', dep: '14:00', arr: '15:45',   airline: 'Delta' },
+  'DL9358': { label: 'Rajesh family return (2/3)', date: '2026-04-11', from: 'AMS', to: 'JFK', dep: '17:30', arr: '20:00',   airline: 'Delta' },
+  'DL2245': { label: 'Rajesh family return (3/3)', date: '2026-04-11', from: 'JFK', to: 'ATL', dep: '21:30', arr: '23:59',   airline: 'Delta' },
 };
 
 // Security advisory logic — no external API needed

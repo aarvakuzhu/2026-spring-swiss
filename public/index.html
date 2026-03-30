@@ -548,11 +548,12 @@ const DAYS = [
     location: 'Atlanta → Switzerland',
     split: true,
     ashokNote: '1:05 PM depart ATL\nUA8392 · ATL→YUL→GVA\nArrives Geneva morning Apr 5',
-    rajeshNote: '10:00 PM depart ATL\nKLM · ATL→AMS→ZUR\nArrives Zurich morning Apr 5',
+    rajeshNote: '10:00 PM depart ATL\nDelta DL9375 · ATL→AMS\nThen DL9435 AMS→ZUR\nArrives Zurich Apr 5',
     weather: null,
     trains: [
       { time:'1:05 PM', family:'ashok', desc:'United UA8392 — ATL → YUL → GVA', note:'Departs ATL · Arrives Geneva morning Apr 5', sbb:'https://www.united.com' },
-      { time:'10:00 PM', family:'rajesh', desc:'KLM — ATL → AMS → ZUR', note:'Departs ATL · Arrives Zurich morning Apr 5', sbb:'https://www.klm.com' },
+      { time:'10:00 PM', family:'rajesh', desc:'Delta DL9375 — ATL → AMS', note:'Departs ATL · Connects AMS → ZUR (DL9435) · Arrives Zurich Apr 5', sbb:'https://www.delta.com' },
+      { time:'+Next day', family:'rajesh', desc:'Delta DL9435 — AMS → ZUR', note:'Connection at Amsterdam · Arrives Zurich Apr 5', sbb:'https://www.delta.com' },
     ],
     activities: [
       { time:'Before', title:'Activate Swiss Travel Pass on Apr 5', note:'Valid SBB trains, boats, mountain railways, many museums' },
@@ -678,11 +679,12 @@ const DAYS = [
     location: 'Departure → Atlanta',
     split: true,
     ashokNote: '11:00 AM UA749\nGVA → IAD → ATL\nArrives Atlanta Apr 11',
-    rajeshNote: '2:00 PM KLM\nZUR → AMS → ATL\nArrives Atlanta Apr 12',
+    rajeshNote: '2:00 PM DL9244\nZUR → AMS\nDL9358 AMS → JFK\nDL2245 JFK → ATL\nArrives Atlanta Apr 11',
     weather: null,
     trains: [
       { time:'8:00 AM', family:'ashok', desc:'Geneva Hotel → GVA Airport', note:'Allow 2h before 11 AM flight · Check in by 9 AM', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Gen%C3%A8ve+A%C3%A9roport&von=Gen%C3%A8ve&datum=11.04.2026&zeit=08:00&abFahrt=true' },
-      { time:'11:00 AM', family:'rajesh', desc:'Rümlang → Zurich Airport (ZUR)', note:'Short taxi · 2 PM flight · Check in by 11:30 AM', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Z%C3%BCrich+Flughafen&von=R%C3%BCmlang&datum=11.04.2026&zeit=11:00&abFahrt=true' },
+      { time:'11:00 AM', family:'rajesh', desc:'Rümlang → Zurich Airport (ZUR)', note:'Short taxi · DL9244 departs 2 PM · Check in by 11:30 AM', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Z%C3%BCrich+Flughafen&von=R%C3%BCmlang&datum=11.04.2026&zeit=11:00&abFahrt=true' },
+      { time:'2:00 PM', family:'rajesh', desc:'Delta DL9244 — ZUR → AMS', note:'Connects to DL9358 AMS → JFK, then DL2245 JFK → ATL · Arrives Atlanta Apr 11', sbb:'https://www.delta.com' },
     ],
     activities: [
       { time:'Night before', title:'Pack & weigh luggage — chocolate is heavy!', note:'Swiss duty-free limit: CHF 300 for VAT refund eligibility' },
@@ -1353,11 +1355,14 @@ function showToast(msg) {
 const TRIP_FLIGHTS = {
   0: [ // Apr 4 outbound
     { fn: 'UA8392', family: 'ashok', from: 'ATL', to: 'GVA', via: 'YUL', dep: '1:05 PM', arr: '9:55 AM+1', airline: 'United' },
-    { fn: 'KL0622', family: 'rajesh', from: 'ATL', to: 'AMS', dep: '10:00 PM', arr: '1:30 PM+1', airline: 'KLM' },
+    { fn: 'DL9375', family: 'rajesh', from: 'ATL', to: 'AMS', dep: '10:00 PM', arr: '1:30 PM+1', airline: 'Delta' },
+    { fn: 'DL9435', family: 'rajesh', from: 'AMS', to: 'ZUR', dep: '~3:00 PM', arr: '~4:30 PM', airline: 'Delta (connection)' },
   ],
   7: [ // Apr 11 return
     { fn: 'UA749',  family: 'ashok', from: 'GVA', to: 'ATL', via: 'IAD', dep: '11:00 AM', arr: '6:30 PM', airline: 'United' },
-    { fn: 'KL0621', family: 'rajesh', from: 'ZUR', to: 'ATL', via: 'AMS', dep: '2:00 PM', arr: '11:59 PM', airline: 'KLM' },
+    { fn: 'DL9244', family: 'rajesh', from: 'ZUR', to: 'AMS', dep: '2:00 PM',  arr: '~3:45 PM', airline: 'Delta' },
+    { fn: 'DL9358', family: 'rajesh', from: 'AMS', to: 'JFK', dep: '~5:30 PM', arr: '~8:00 PM', airline: 'Delta' },
+    { fn: 'DL2245', family: 'rajesh', from: 'JFK', to: 'ATL', dep: '~9:30 PM', arr: '~11:59 PM', airline: 'Delta' },
   ],
 };
 
@@ -1532,14 +1537,14 @@ TWO FAMILIES TRAVELING TOGETHER:
 - Rajesh family: Rajesh (47M), Anitha (47F), Rajitha (17F - art/museums), Rashmitha (14F - origami/crafts)
 
 ITINERARY SUMMARY:
-- Apr 4: Fly out. Ashok: ATL→YUL→GVA (UA8392). Rajesh: ATL→AMS→ZUR (KLM)
+- Apr 4: Fly out. Ashok: ATL→YUL→GVA (UA8392). Rajesh: ATL→AMS (DL9375), then AMS→ZUR (DL9435, arrives Apr 5)
 - Apr 5: Arrive & converge in Wilderswil. Ashok via GoldenPass Express Geneva→Interlaken. Rajesh via Zurich. Hotel: Alpenrose Hotel, Wilderswil
 - Apr 6: Schilthorn day. Thrill Walk at Birg, Piz Gloria (007 museum), Staubbach Falls. Back to Alpenrose
 - Apr 7: Grindelwald. First Cliff Walk. Check in AlpinHotel Bort (last gondola 3:34 PM!)
 - Apr 8: Zermatt. Klein Matterhorn (Glacier Paradise), Toblerone view, Rifelsee lake. Hotel Mountime, Tasch
 - Apr 9: Lucerne. Chapel Bridge, evening boat ride. Holiday Inn Express Kriens
 - Apr 10: Zurich. Swiss National Museum, Old Town, FIFA Museum, Boat ride, Lindt Museum. Holiday Inn Rümlang. Ashok family heads to Geneva airport hotel
-- Apr 11: Fly home. Ashok: GVA→IAD→ATL (UA749 11AM). Rajesh: ZUR→AMS→ATL (KLM 2PM)
+- Apr 11: Fly home. Ashok: GVA→IAD→ATL (UA749 11AM). Rajesh: ZUR→AMS (DL9244 2PM) → JFK (DL9358) → ATL (DL2245), arrives Atlanta Apr 11 late night
 
 KEY LOGISTICS:
 - Swiss Travel Pass covers SBB trains, boats, many cable cars and museums
