@@ -4,8 +4,8 @@ services:
     env: node
     region: oregon
     plan: free
-    buildCommand: npm install
-    startCommand: npm start
+    buildCommand: npm install --production
+    startCommand: node server/index.js
     envVars:
       - key: MONGODB_URI
         sync: false          # set manually in Render dashboard — do not commit secret
