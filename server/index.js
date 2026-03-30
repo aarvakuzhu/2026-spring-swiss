@@ -21,6 +21,7 @@ mongoose.connect(process.env.MONGODB_URI)
 app.use('/api/members',   require('./routes/members'));
 app.use('/api/checklist', require('./routes/checklist'));
 app.use('/api/notes',     require('./routes/notes'));
+app.use('/api/seed',      require('./routes/seed'));
 
 // ── Health check ──
 app.get('/api/health', (req, res) => res.json({ status: 'ok', ts: new Date() }));
