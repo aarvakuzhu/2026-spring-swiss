@@ -41,8 +41,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .hdr-avatar { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
 .hdr-name { font-weight: 700; font-size: 1rem; line-height: 1.1; }
 .hdr-sub { font-size: 0.7rem; opacity: 0.8; }
-.switch-row { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
-.switch-row::-webkit-scrollbar { display: none; }
+.switch-row { display: flex; flex-direction: column; gap: 5px; padding-bottom: 10px; }
+.chip-row { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+.chip-row::-webkit-scrollbar { display: none; }
 .member-chip {
   flex: 0 0 auto; display: flex; align-items: center; gap: 5px;
   padding: 5px 10px; border-radius: 20px;
@@ -326,6 +327,57 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--ink); color: white; padding: 10px 18px; border-radius: 20px; font-size: 0.78rem; z-index: 500; opacity: 0; transition: opacity 0.2s; pointer-events: none; white-space: nowrap; }
 .toast.show { opacity: 1; }
 
+/* ── COLLAPSED GROUPS ── */
+.cl-section { background: var(--card); border-radius: var(--radius); margin-bottom: 8px; overflow: hidden; }
+.cl-section-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 14px; cursor: pointer; user-select: none;
+}
+.cl-section-hdr:active { background: var(--bg); }
+.cl-section-left { display: flex; align-items: center; gap: 10px; }
+.cl-section-icon { width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+.cl-section-title { font-weight: 700; font-size: 0.88rem; }
+.cl-section-count { font-size: 0.72rem; color: var(--sub); margin-top: 1px; }
+.cl-section-right { display: flex; align-items: center; gap: 8px; }
+.cl-mini-progress { width: 36px; height: 36px; flex-shrink: 0; }
+.cl-chevron { color: var(--sub); font-size: 0.8rem; transition: transform 0.2s; }
+.cl-chevron.open { transform: rotate(90deg); }
+.cl-section-body { display: none; border-top: 1px solid var(--line); }
+.cl-section-body.open { display: block; }
+
+/* ── SEARCH ── */
+.search-bar-wrap { position: sticky; top: 0; background: var(--bg); padding: 10px 0 6px; z-index: 10; }
+.search-bar {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--card); border-radius: 12px; padding: 10px 14px;
+  border: 1.5px solid var(--line);
+}
+.search-bar.focused { border-color: var(--mc); }
+.search-icon { font-size: 1rem; color: var(--sub); flex-shrink: 0; }
+.search-input { flex: 1; border: none; background: none; font-family: inherit; font-size: 0.88rem; color: var(--ink); outline: none; }
+.search-clear { color: var(--sub); font-size: 0.8rem; padding: 2px 6px; cursor: pointer; }
+
+.search-chips { display: flex; gap: 6px; overflow-x: auto; padding: 4px 0 8px; scrollbar-width: none; }
+.search-chips::-webkit-scrollbar { display: none; }
+.search-chip { flex: 0 0 auto; padding: 7px 13px; background: var(--card); border-radius: 18px; font-size: 0.72rem; font-weight: 600; color: var(--mc); border: 1.5px solid var(--line); cursor: pointer; }
+.search-chip:active { background: var(--mc); color: white; }
+
+.search-result {
+  background: var(--card); border-radius: var(--radius); padding: 14px;
+  margin-top: 10px; white-space: pre-wrap; font-size: 0.84rem; line-height: 1.6;
+}
+.search-result h3 { font-size: 0.88rem; font-weight: 700; margin-bottom: 6px; }
+.search-loading { display: flex; align-items: center; gap: 10px; background: var(--card); border-radius: var(--radius); padding: 14px; margin-top: 10px; }
+.search-loading-text { font-size: 0.82rem; color: var(--sub); }
+
+.search-history { margin-top: 10px; }
+.sh-label { font-size: 0.72rem; font-weight: 700; color: var(--sub); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+.sh-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--card); border-radius: 10px; margin-bottom: 6px; cursor: pointer; }
+.sh-item:active { opacity: 0.7; }
+.sh-icon { color: var(--sub); font-size: 0.85rem; }
+.sh-text { flex: 1; font-size: 0.84rem; }
+.sh-del { color: var(--sub); font-size: 0.72rem; padding: 4px 8px; }
+
 /* ── LOADING ── */
 .loader { text-align: center; padding: 40px 20px; color: var(--sub); font-size: 0.84rem; }
 </style>
@@ -361,6 +413,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   </button>
   <button class="tab-item" onclick="showTab('checklist')" id="tab-checklist">
     <div class="ti-icon">✅</div>Checklist
+  </button>
+  <button class="tab-item" onclick="showTab('search')" id="tab-search">
+    <div class="ti-icon">🔍</div>Search
   </button>
   <button class="tab-item" onclick="showTab('notes')" id="tab-notes">
     <div class="ti-icon">📝</div>Notes
@@ -714,18 +769,16 @@ async function loadMembers() {
 
 function buildSwitchRow() {
   const row = document.getElementById('switchRow');
-  // Group: Ashok family first, then Rajesh
-  const sorted = [...allMembers].sort((a,b) => {
-    if (a.family !== b.family) return a.family === 'ashok' ? -1 : 1;
-    if (a.role !== b.role) return a.role === 'adult' ? -1 : 1;
-    return a.age - b.age;
-  });
-  row.innerHTML = sorted.map(m => `
-    <button class="member-chip ${m._id === currentMember?._id ? 'active' : ''}"
-      id="chip-${m._id}" onclick="switchTo('${m._id}')">
-      <span class="chip-avatar">${m.avatar}</span>
-      ${m.name}
-    </button>`).join('');
+  // Row 1: adults (Ashok order first), Row 2: kids
+  const adults = [...allMembers].filter(m=>m.role==='adult').sort((a,b)=>a.family==='ashok'?-1:1);
+  const kids   = [...allMembers].filter(m=>m.role==='kid').sort((a,b)=>a.family==='ashok'?-1:1);
+
+  const chip = m => `<button class="member-chip ${m._id===currentMember?._id?'active':''}" id="chip-${m._id}" onclick="switchTo('${m._id}')"><span class="chip-avatar">${m.avatar}</span>${m.name}</button>`;
+
+  row.innerHTML = `
+    <div class="chip-row">${adults.map(chip).join('')}</div>
+    <div class="chip-row">${kids.map(chip).join('')}</div>
+  `;
 }
 
 function switchTo(id) {
@@ -793,6 +846,7 @@ function showTab(tab) {
 function renderCurrentTab() {
   if (currentTab==='itinerary') renderItinerary();
   else if (currentTab==='checklist') { loadChecklist(); }
+  else if (currentTab==='search') { renderSearch(); }
   else if (currentTab==='notes') { loadNotes(currentDay); }
   else if (currentTab==='booking') renderBooking();
 }
@@ -995,62 +1049,102 @@ async function loadChecklist() {
   } catch(e) { document.getElementById('scrollArea').innerHTML = `<div class="loader">Could not load checklist</div>`; }
 }
 
+// Track which sections are open
+const clOpenSections = new Set(['before-travel','packing']); // default open
+
 function renderChecklist() {
   const isKid = currentMember?.role === 'kid';
-  const filtered = clData.filter(i => {
+  const visibleItems = clData.filter(i => {
     if (i.audience==='adults' && isKid) return false;
     if (i.audience==='kids' && !isKid) return false;
-    return clFilter==='all' || i.category===clFilter;
+    return true;
   });
+
   const groups = {};
-  filtered.forEach(i => { if(!groups[i.category]) groups[i.category]=[]; groups[i.category].push(i); });
+  visibleItems.forEach(i => { if(!groups[i.category]) groups[i.category]=[]; groups[i.category].push(i); });
   const pOrder = {high:0,medium:1,low:2};
   Object.keys(groups).forEach(k => groups[k].sort((a,b)=>(pOrder[a.priority]||1)-(pOrder[b.priority]||1)));
 
-  const totalItems = clData.filter(i => i.category!=='note' && (i.audience!=='adults'||!isKid) && (i.audience!=='kids'||isKid)).length;
-  const myDone = clData.filter(i => i.category!=='note' && (i.audience!=='adults'||!isKid) && i.completions?.find(c=>c.memberId===currentMember?._id)).length;
-  const pct = totalItems ? Math.round((myDone/totalItems)*100) : 0;
+  const sectionMeta = {
+    'packing':        {label:'Things to Buy / Pack', icon:'🛍', bg:'#FFF7ED'},
+    'before-travel':  {label:'Before You Travel',    icon:'📋', bg:'#EFF6FF'},
+    'during-travel':  {label:'During Travel',         icon:'🧳', bg:'#ECFDF5'},
+    'booking':        {label:'Bookings & Tickets',   icon:'🎫', bg:'#FDF4FF'},
+    'note':           {label:'Areas to Explore',     icon:'⭐', bg:'#FEFCE8'},
+  };
 
-  const labels = {'before-travel':'📋 Before You Travel','packing':'🛍 Things to Buy / Pack','booking':'🎫 Bookings','day-activity':'📅 Day-of','note':'⭐ Areas to Explore'};
+  // Overall progress (exclude notes)
+  const countable = visibleItems.filter(i=>i.category!=='note');
+  const myDone = countable.filter(i=>i.completions?.find(c=>c.memberId===currentMember?._id)).length;
+  const pct = countable.length ? Math.round((myDone/countable.length)*100) : 0;
 
-  let html = `<div class="cl-filter-row">
-    ${['all','before-travel','packing','booking','note'].map(f=>`<button class="cl-filter ${clFilter===f?'active':''}" onclick="setClFilter('${f}')">${f==='all'?'All':f==='before-travel'?'Pre-trip':f==='packing'?'Packing':f==='booking'?'Bookings':'Explore'}</button>`).join('')}
-  </div>
-  <div class="progress-bar-wrap">
-    <div class="pb-row"><span class="pb-label">Your progress</span><span class="pb-count">${myDone}/${totalItems} done</span></div>
+  let html = `<div class="progress-bar-wrap">
+    <div class="pb-row"><span class="pb-label">Overall progress</span><span class="pb-count">${myDone}/${countable.length}</span></div>
     <div class="pb-track"><div class="pb-fill" style="width:${pct}%"></div></div>
   </div>`;
 
-  Object.keys(labels).forEach(cat => {
-    if (!groups[cat]?.length) return;
-    html += `<div class="cl-group-label">${labels[cat]}</div>`;
-    groups[cat].forEach((item, idx) => {
-      const isDone = !!item.completions?.find(c=>c.memberId===currentMember?._id);
-      const others = item.completions?.filter(c=>c.memberId!==currentMember?._id).map(c=>c.memberName)||[];
-      const dotClass = item.priority==='high'?'p-high':item.priority==='medium'?'p-medium':'p-low';
-      const isFirst = idx===0, isLast = idx===groups[cat].length-1, isOnly = groups[cat].length===1;
-      html += `<div class="cl-item ${isFirst&&!isOnly?'':''}${isOnly?'only-item':''}" id="ci-${item._id}">
-        <div class="priority-dot ${dotClass}" style="margin-top:4px"></div>
-        <div class="cl-check ${isDone?'done':''}" onclick="toggleCheck('${item._id}')"></div>
-        <div class="cl-body">
-          <div class="cl-text ${isDone?'done':''}">${item.text}</div>
-          <div class="cl-meta">
-            ${item.audience==='adults'?`<span style="font-size:0.6rem;background:#DBEAFE;color:var(--ashok);padding:1px 5px;border-radius:4px;font-weight:700">Adults</span>`:''}
-            ${item.audience==='kids'?`<span style="font-size:0.6rem;background:#EDE9FE;color:var(--purple);padding:1px 5px;border-radius:4px;font-weight:700">Kids</span>`:''}
-            ${item.addedBy?`<span class="cl-by">💬 ${item.addedBy}</span>`:''}
-            ${others.length?`<span class="cl-done-by">✓ ${others.join(', ')}</span>`:''}
+  const catOrder = ['packing','before-travel','during-travel','booking','note'];
+  catOrder.forEach(cat => {
+    const items = groups[cat];
+    if (!items?.length) return;
+    const meta = sectionMeta[cat] || {label:cat, icon:'📌', bg:'#F5F5F5'};
+    const doneCount = items.filter(i=>i.completions?.find(c=>c.memberId===currentMember?._id)).length;
+    const isOpen = clOpenSections.has(cat);
+    const radius = 16;
+    const circ = 2 * Math.PI * radius;
+    const dash = (doneCount/items.length)*circ;
+
+    html += `<div class="cl-section">
+      <div class="cl-section-hdr" onclick="toggleSection('${cat}')">
+        <div class="cl-section-left">
+          <div class="cl-section-icon" style="background:${meta.bg}">${meta.icon}</div>
+          <div>
+            <div class="cl-section-title">${meta.label}</div>
+            <div class="cl-section-count">${doneCount}/${items.length} done</div>
           </div>
-          ${item.isBookingRequired&&item.bookingUrl?`<a href="${item.bookingUrl}" class="book-badge" target="_blank">🔗 Book now ↗</a>`:''}
         </div>
-      </div>`;
-    });
+        <div class="cl-section-right">
+          <svg class="cl-mini-progress" viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="${radius}" fill="none" stroke="#E5E5EA" stroke-width="3"/>
+            <circle cx="18" cy="18" r="${radius}" fill="none" stroke="var(--mc)" stroke-width="3"
+              stroke-dasharray="${dash.toFixed(1)} ${circ.toFixed(1)}"
+              stroke-linecap="round" transform="rotate(-90 18 18)"/>
+            <text x="18" y="22" text-anchor="middle" font-size="9" font-weight="700" fill="var(--ink)">${Math.round(doneCount/items.length*100)}%</text>
+          </svg>
+          <span class="cl-chevron ${isOpen?'open':''}">›</span>
+        </div>
+      </div>
+      <div class="cl-section-body ${isOpen?'open':''}">
+        ${items.map(item => {
+          const isDone = !!item.completions?.find(c=>c.memberId===currentMember?._id);
+          const others = item.completions?.filter(c=>c.memberId!==currentMember?._id).map(c=>c.memberName)||[];
+          const dotClass = item.priority==='high'?'p-high':item.priority==='medium'?'p-medium':'p-low';
+          return `<div class="cl-item" id="ci-${item._id}">
+            <div class="priority-dot ${dotClass}" style="margin-top:4px"></div>
+            <div class="cl-check ${isDone?'done':''}" onclick="toggleCheck('${item._id}')"></div>
+            <div class="cl-body">
+              <div class="cl-text ${isDone?'done':''}">${item.text}</div>
+              <div class="cl-meta">
+                ${item.audience==='adults'?`<span style="font-size:0.6rem;background:#DBEAFE;color:var(--ashok);padding:1px 5px;border-radius:4px;font-weight:700">Adults</span>`:''}
+                ${item.audience==='kids'?`<span style="font-size:0.6rem;background:#EDE9FE;color:var(--purple);padding:1px 5px;border-radius:4px;font-weight:700">Kids</span>`:''}
+                ${item.dayIndex!=null?`<span style="font-size:0.6rem;background:#F0FDF4;color:#15803D;padding:1px 5px;border-radius:4px;font-weight:700">Apr ${item.dayIndex+4}</span>`:''}
+                ${item.addedBy?`<span class="cl-by">💬 ${item.addedBy}</span>`:''}
+                ${others.length?`<span class="cl-done-by">✓ ${others.join(', ')}</span>`:''}
+              </div>
+              ${item.isBookingRequired&&item.bookingUrl?`<a href="${item.bookingUrl}" class="book-badge" target="_blank">🔗 Book now ↗</a>`:''}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
   });
 
   html += `<div class="add-form">
     <input type="text" id="newItemText" placeholder="Add an item…">
     <select id="newItemCat">
-      <option value="before-travel">Pre-trip</option>
-      <option value="packing">Packing</option>
+      <option value="packing">Packing / Things to buy</option>
+      <option value="before-travel">Pre-trip task</option>
+      <option value="during-travel">During travel</option>
       <option value="booking">Booking needed</option>
       <option value="note">Area to explore</option>
     </select>
@@ -1058,6 +1152,12 @@ function renderChecklist() {
   </div>`;
 
   document.getElementById('scrollArea').innerHTML = html;
+}
+
+function toggleSection(cat) {
+  if (clOpenSections.has(cat)) clOpenSections.delete(cat);
+  else clOpenSections.add(cat);
+  renderChecklist();
 }
 
 function setClFilter(f) { clFilter=f; renderChecklist(); }
@@ -1273,6 +1373,120 @@ function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+
+// ── SEARCH ──
+let searchHistory = JSON.parse(localStorage.getItem('swissSearch') || '[]').slice(0,8);
+const QUICK_SEARCHES = [
+  `Best restaurants in ${['Interlaken','Grindelwald','Zermatt','Lucerne','Zurich'][Math.min(Math.max(0,new Date()-new Date('2026-04-05'))/ 86400000|0, 4)]}`,
+  'Fondue restaurants open tonight',
+  'Train from Interlaken to Grindelwald',
+  'Indian restaurants in Zurich',
+  'What time do Swiss restaurants close?',
+  'Vegetarian options in Zermatt',
+  'Best bakery for breakfast Wilderswil',
+  'SBB train delay info',
+];
+
+function renderSearch() {
+  const loc = DAYS[currentDay].location.split('·')[0].trim();
+  let html = `<div class="search-bar-wrap">
+    <div class="search-bar" id="searchBar">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="searchInput" placeholder="Search restaurants, trains, tips…"
+        onkeydown="if(event.key==='Enter')doSearch()"
+        oninput="document.getElementById('searchClear').style.display=this.value?'':'none'"
+        onfocus="document.getElementById('searchBar').classList.add('focused')"
+        onblur="document.getElementById('searchBar').classList.remove('focused')">
+      <span class="search-clear" id="searchClear" style="display:none" onclick="clearSearch()">✕</span>
+    </div>
+    <div class="search-chips">
+      <button class="search-chip" onclick="quickSearch('Best restaurants in ${loc}')">🍽 Restaurants near me</button>
+      <button class="search-chip" onclick="quickSearch('Fondue or raclette near ${loc}')">🧀 Fondue tonight</button>
+      <button class="search-chip" onclick="quickSearch('Train options from ${loc} area')">🚂 Train options</button>
+      <button class="search-chip" onclick="quickSearch('What to do in ${loc} with kids')">👧 Kids activities</button>
+      <button class="search-chip" onclick="quickSearch('Indian or Asian restaurants in ${loc}')">🍛 Asian food</button>
+      <button class="search-chip" onclick="quickSearch('Restaurant opening hours ${loc}')">⏰ Opening hours</button>
+    </div>
+  </div>
+  <div id="searchResults">`;
+
+  if (searchHistory.length) {
+    html += '<div class="search-history"><div class="sh-label">Recent searches</div>';
+    searchHistory.forEach((q,i) => {
+      html += '<div class="sh-item" onclick="quickSearch(searchHistory['+i+'])">' +
+        '<span class="sh-icon">🕐</span>' +
+        '<span class="sh-text">'+q+'</span>' +
+        '<span class="sh-del" onclick="event.stopPropagation();removeHistory('+i+')">✕</span>' +
+        '</div>';
+    });
+    html += '</div>';
+  }
+
+
+  html += `</div>`;
+  document.getElementById('scrollArea').innerHTML = html;
+}
+
+function encodeSearch(idx) {
+  // Called from onclick — returns nothing, just triggers quickSearch
+  quickSearch(searchHistory[idx]);
+  return false;
+}
+function clearSearch() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchClear').style.display = 'none';
+  document.getElementById('searchResults').innerHTML = '';
+  renderSearch();
+}
+
+function quickSearch(q) {
+  document.getElementById('searchInput').value = q;
+  document.getElementById('searchClear').style.display = '';
+  doSearch();
+}
+
+function removeHistory(idx) {
+  searchHistory.splice(idx, 1);
+  localStorage.setItem('swissSearch', JSON.stringify(searchHistory));
+  renderSearch();
+}
+
+async function doSearch() {
+  const q = document.getElementById('searchInput')?.value?.trim();
+  if (!q) return;
+
+  // Save to history
+  searchHistory = [q, ...searchHistory.filter(x=>x!==q)].slice(0,8);
+  try { localStorage.setItem('swissSearch', JSON.stringify(searchHistory)); } catch(e){}
+
+  const loc = DAYS[currentDay].location;
+  const context = `Currently viewing: ${loc} (${DAYS[currentDay].date}). Member: ${currentMember?.name||'unknown'}.`;
+
+  document.getElementById('searchResults').innerHTML = `
+    <div class="search-loading">
+      <div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>
+      <span class="search-loading-text">Searching for "${q}"…</span>
+    </div>`;
+
+  try {
+    const r = await fetch('/api/search', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({query: q, context})
+    });
+    const data = await r.json();
+    const reply = data.reply || (data.error ? `⚠️ ${data.detail||data.error}` : 'No results — try rephrasing');
+
+    document.getElementById('searchResults').innerHTML = `
+      <div class="search-result">${reply.replace(/\n/g,'\n')}</div>
+      <div style="text-align:center;margin-top:10px">
+        <button class="search-chip" onclick="doSearch()" style="background:var(--card)">↻ Search again</button>
+      </div>`;
+  } catch(e) {
+    document.getElementById('searchResults').innerHTML = `<div class="search-result">⚠️ Search unavailable — check connection</div>`;
+  }
 }
 
 // ── INIT ──

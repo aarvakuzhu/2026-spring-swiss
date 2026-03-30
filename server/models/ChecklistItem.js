@@ -11,7 +11,7 @@ const completionSchema = new mongoose.Schema({
 const checklistItemSchema = new mongoose.Schema({
   category: {
     type: String,
-    enum: ['before-travel', 'packing', 'booking', 'day-activity', 'note'],
+    enum: ['before-travel', 'packing', 'booking', 'day-activity', 'during-travel', 'note'],
     default: 'before-travel'
   },
   audience: {

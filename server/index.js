@@ -24,6 +24,7 @@ app.use('/api/notes',     require('./routes/notes'));
 app.use('/api/seed',      require('./routes/seed'));
 app.use('/api/chat',      require('./routes/chat'));
 app.use('/api/flights',    require('./routes/flights'));
+app.use('/api/search',    require('./routes/search'));
 
 // ── Health check ──
 app.get('/api/health', (req, res) => res.json({ status: 'ok', ts: new Date() }));

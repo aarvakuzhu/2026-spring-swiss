@@ -51,6 +51,24 @@ const DEFAULT_CHECKLIST = [
   { category: 'before-travel', audience: 'adults', priority: 'medium', text: 'Share itinerary and emergency contacts with both families',        relevantFamilies: ['ashok','rajesh'] },
 
   // ══════════════════════════════════
+  // DURING TRAVEL — group coordination, collecting, locations
+  // ══════════════════════════════════
+  { category: 'during-travel', audience: 'adults', priority: 'high',   text: 'Who carries the Swiss Travel Passes each day?',              relevantFamilies: ['ashok','rajesh'], addedBy: 'Ashok' },
+  { category: 'during-travel', audience: 'adults', priority: 'high',   text: 'Portable charger — designate one person per family',         relevantFamilies: ['ashok','rajesh'], addedBy: 'Ashok' },
+  { category: 'during-travel', audience: 'adults', priority: 'medium', text: 'Emergency contact list saved offline on all adult phones',    relevantFamilies: ['ashok','rajesh'], addedBy: 'Ashok' },
+  { category: 'during-travel', audience: 'all',    priority: 'medium', text: 'Agree on a meeting point at each major attraction',          relevantFamilies: ['ashok','rajesh'], addedBy: 'Ashok' },
+  { category: 'during-travel', audience: 'all',    priority: 'low',    text: 'Swiss chocolate — Lindt, Läderach, Sprüngli, local shops',   relevantFamilies: ['ashok','rajesh'], addedBy: 'KP' },
+  { category: 'during-travel', audience: 'all',    priority: 'low',    text: 'Swiss army knife / Victorinox souvenir',                     relevantFamilies: ['ashok','rajesh'], addedBy: 'KP' },
+  { category: 'during-travel', audience: 'all',    priority: 'low',    text: 'Postcards or local keepsakes to bring home',                 relevantFamilies: ['ashok','rajesh'], addedBy: 'KP' },
+  { category: 'during-travel', audience: 'all',    priority: 'low',    text: 'Local cheese or Swiss food items to pack back',              relevantFamilies: ['ashok','rajesh'], addedBy: 'Anitha' },
+  { category: 'during-travel', audience: 'kids',   priority: 'low',    text: 'Edelweiss or Alps souvenir for school show-and-tell',        relevantFamilies: ['ashok','rajesh'], addedBy: 'Ashok' },
+  { category: 'during-travel', audience: 'all',    priority: 'medium', text: 'Apr 6 — Try fondue or raclette in Mürren/Lauterbrunnen',    relevantFamilies: ['ashok','rajesh'], dayIndex: 2, addedBy: 'Anitha' },
+  { category: 'during-travel', audience: 'all',    priority: 'medium', text: 'Apr 7 — Walk Grindelwald village at golden hour',            relevantFamilies: ['ashok','rajesh'], dayIndex: 3, addedBy: 'KP' },
+  { category: 'during-travel', audience: 'all',    priority: 'medium', text: 'Apr 8 — Family photo at Rifelsee lake (Matterhorn reflection)', relevantFamilies: ['ashok','rajesh'], dayIndex: 4, addedBy: 'KP' },
+  { category: 'during-travel', audience: 'all',    priority: 'medium', text: 'Apr 9 — Feed the swans on Lake Lucerne',                    relevantFamilies: ['ashok','rajesh'], dayIndex: 5, addedBy: 'Anitha' },
+  { category: 'during-travel', audience: 'all',    priority: 'medium', text: 'Apr 10 — Group photo in Zurich old town',                   relevantFamilies: ['ashok','rajesh'], dayIndex: 6, addedBy: 'KP' },
+
+  // ══════════════════════════════════
   // AREAS TO EXPLORE — notes, all
   // ══════════════════════════════════
   { category: 'note', audience: 'all', dayIndex: 4, text: 'Rifelsee Lake — Matterhorn reflection best before 9 AM',                relevantFamilies: ['ashok','rajesh'] },
