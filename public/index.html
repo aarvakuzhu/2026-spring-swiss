@@ -354,6 +354,58 @@ body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(
 @keyframes bounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
 .chat-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 599; display: none; }
 .chat-overlay.open { display: block; }
+
+/* ── FLIGHT STATUS ── */
+.flight-status-card {
+  background: #0F172A; border-radius: 12px; padding: 14px; margin-bottom: 12px; color: white;
+}
+.fs-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.fs-flight-num { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; letter-spacing: 0.05em; }
+.fs-label { font-size: 0.65rem; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+.fs-status-badge { padding: 4px 10px; border-radius: 20px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+.fs-status-badge.scheduled { background: #1E40AF; color: #93C5FD; }
+.fs-status-badge.active { background: #065F46; color: #6EE7B7; }
+.fs-status-badge.landed { background: #374151; color: #9CA3AF; }
+.fs-status-badge.delayed { background: #7F1D1D; color: #FCA5A5; }
+.fs-status-badge.cancelled { background: #7F1D1D; color: #FCA5A5; }
+.fs-status-badge.unknown { background: #374151; color: #9CA3AF; }
+
+.fs-route { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.fs-airport { text-align: center; }
+.fs-iata { font-size: 1.5rem; font-weight: 700; letter-spacing: 0.05em; }
+.fs-city { font-size: 0.62rem; color: #94A3B8; margin-top: 1px; }
+.fs-time { font-size: 0.82rem; font-weight: 600; margin-top: 3px; }
+.fs-delay { font-size: 0.65rem; color: #FCA5A5; margin-top: 1px; }
+.fs-line { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.fs-line-track { width: 100%; height: 1px; background: #334155; position: relative; }
+.fs-line-dot { position: absolute; top: -3px; width: 7px; height: 7px; background: #60A5FA; border-radius: 50%; animation: flight-move 3s ease-in-out infinite alternate; }
+@keyframes flight-move { from { left: 10%; } to { left: 85%; } }
+.fs-airline { font-size: 0.65rem; color: #64748B; text-align: center; }
+.fs-via { font-size: 0.62rem; color: #60A5FA; }
+
+.fs-details { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
+.fs-detail { background: #1E293B; border-radius: 8px; padding: 7px 10px; }
+.fs-detail-label { font-size: 0.6rem; color: #64748B; text-transform: uppercase; letter-spacing: 0.06em; }
+.fs-detail-val { font-size: 0.8rem; font-weight: 600; margin-top: 2px; }
+
+.fs-live-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 0.6rem; color: #6EE7B7; margin-top: 8px; }
+.fs-live-dot { width: 6px; height: 6px; border-radius: 50%; background: #6EE7B7; animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+.fs-refresh { background: none; border: 1px solid #334155; color: #94A3B8; border-radius: 6px; padding: 4px 10px; font-size: 0.65rem; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-top: 8px; }
+.fs-refresh:active { background: #1E293B; }
+
+.airport-advisory { background: #1C1917; border-radius: 12px; padding: 14px; margin-bottom: 12px; border-left: 3px solid #F59E0B; }
+.aa-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.aa-airport { font-weight: 700; font-size: 0.9rem; color: white; }
+.aa-code { font-size: 0.65rem; color: #78716C; text-transform: uppercase; letter-spacing: 0.1em; }
+.aa-peak { font-size: 0.7rem; color: #F59E0B; margin-bottom: 8px; }
+.aa-tip { font-size: 0.75rem; color: #D6D3D1; padding: 4px 0; border-bottom: 1px solid #292524; display: flex; gap: 8px; }
+.aa-tip:last-of-type { border-bottom: none; }
+.aa-tip::before { content: '→'; color: #F59E0B; flex-shrink: 0; }
+.aa-links { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.aa-link { font-size: 0.68rem; color: #60A5FA; text-decoration: none; background: #1E293B; padding: 5px 10px; border-radius: 6px; }
+
 </style>
 </head>
 <body>
@@ -1247,6 +1299,171 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
+
+
+// ══════════════════════════════════
+// FLIGHT STATUS
+// ══════════════════════════════════
+const TRIP_FLIGHTS = {
+  0: [ // Apr 4 outbound
+    { fn: 'UA8392', family: 'ashok', from: 'ATL', to: 'GVA', via: 'YUL', dep: '1:05 PM', arr: '9:55 AM+1', airline: 'United' },
+    { fn: 'KL0622', family: 'rajesh', from: 'ATL', to: 'AMS', dep: '10:00 PM', arr: '1:30 PM+1', airline: 'KLM' },
+  ],
+  7: [ // Apr 11 return
+    { fn: 'UA749',  family: 'ashok', from: 'GVA', to: 'ATL', via: 'IAD', dep: '11:00 AM', arr: '6:30 PM', airline: 'United' },
+    { fn: 'KL0621', family: 'rajesh', from: 'ZUR', to: 'ATL', via: 'AMS', dep: '2:00 PM', arr: '11:59 PM', airline: 'KLM' },
+  ],
+};
+
+const AIRPORT_NAMES = { ATL: 'Atlanta', GVA: 'Geneva', ZUR: 'Zurich', AMS: 'Amsterdam', YUL: 'Montreal', IAD: 'Washington DC' };
+
+async function loadFlightStatus(dayIndex) {
+  const flights = TRIP_FLIGHTS[dayIndex];
+  if (!flights) return '';
+
+  // Show my family's flight first, other second
+  const myFamily = currentMember?.family;
+  const sorted = [...flights].sort((a, b) => {
+    if (a.family === myFamily) return -1;
+    if (b.family === myFamily) return 1;
+    return 0;
+  });
+
+  let html = `<div class="section-label" style="margin-bottom:10px">✈️ Flight Status</div>`;
+
+  for (const f of sorted) {
+    const isMyFlight = f.family === myFamily;
+    html += await buildFlightCard(f, isMyFlight, dayIndex);
+  }
+
+  // Airport advisory
+  const airports = dayIndex === 0 ? ['ATL'] : (myFamily === 'ashok' ? ['GVA'] : ['ZUR']);
+  for (const code of airports) {
+    html += await buildAirportAdvisory(code);
+  }
+
+  return html;
+}
+
+async function buildFlightCard(f, isMyFlight, dayIndex) {
+  let liveData = null;
+  try {
+    const res = await fetch('/api/flights/' + f.fn);
+    if (res.ok) liveData = await res.json();
+  } catch(e) {}
+
+  const status = liveData?.status || 'scheduled';
+  const depTime = liveData?.departure?.actual || liveData?.departure?.estimated || f.dep;
+  const arrTime = liveData?.arrival?.estimated || liveData?.arrival?.actual || f.arr;
+  const depDelay = liveData?.departure?.delay;
+  const gate = liveData?.departure?.gate;
+  const terminal = liveData?.departure?.terminal;
+  const isLive = liveData?.live;
+
+  const familyColor = f.family === 'ashok' ? '#3B82F6' : '#10B981';
+  const pill = f.family === 'ashok'
+    ? '<span class="family-pill pill-ashok">Ashok</span>'
+    : '<span class="family-pill pill-rajesh">Rajesh</span>';
+
+  return `<div class="flight-status-card" style="border-left: 3px solid ${familyColor}">
+    <div class="fs-header">
+      <div>
+        ${pill}
+        <div class="fs-flight-num">${f.fn}</div>
+        <div class="fs-label">${f.airline}</div>
+      </div>
+      <span class="fs-status-badge ${status}">${status}</span>
+    </div>
+    <div class="fs-route">
+      <div class="fs-airport">
+        <div class="fs-iata">${f.from}</div>
+        <div class="fs-city">${AIRPORT_NAMES[f.from] || f.from}</div>
+        <div class="fs-time">${depTime}</div>
+        ${depDelay ? `<div class="fs-delay">+${depDelay} min delay</div>` : ''}
+      </div>
+      <div class="fs-line">
+        <div class="fs-line-track"><div class="fs-line-dot"></div></div>
+        <div class="fs-airline">${f.via ? '→ ' + (AIRPORT_NAMES[f.via] || f.via) + ' →' : '✈ direct'}</div>
+      </div>
+      <div class="fs-airport">
+        <div class="fs-iata">${f.to}</div>
+        <div class="fs-city">${AIRPORT_NAMES[f.to] || f.to}</div>
+        <div class="fs-time">${arrTime}</div>
+      </div>
+    </div>
+    ${(gate || terminal) ? `<div class="fs-details">
+      ${terminal ? `<div class="fs-detail"><div class="fs-detail-label">Terminal</div><div class="fs-detail-val">${terminal}</div></div>` : ''}
+      ${gate ? `<div class="fs-detail"><div class="fs-detail-label">Gate</div><div class="fs-detail-val">${gate}</div></div>` : ''}
+    </div>` : ''}
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+      ${isLive
+        ? '<div class="fs-live-badge"><div class="fs-live-dot"></div>Live data</div>'
+        : '<div style="font-size:0.62rem;color:#475569">Scheduled times · No live key set</div>'}
+      <button class="fs-refresh" onclick="refreshFlight('${f.fn}', ${dayIndex})">↻ Refresh</button>
+    </div>
+  </div>`;
+}
+
+async function buildAirportAdvisory(code) {
+  let data = null;
+  try {
+    const res = await fetch('/api/flights/airport/' + code);
+    if (res.ok) data = await res.json();
+  } catch(e) {}
+  if (!data) return '';
+
+  const linksHtml = [
+    data.myTsaLink ? `<a href="${data.myTsaLink}" class="aa-link" target="_blank">📱 MyTSA App</a>` : '',
+    data.officialLink ? `<a href="${data.officialLink}" class="aa-link" target="_blank">🔗 Airport Security</a>` : '',
+    data.flightAwareLink ? `<a href="${data.flightAwareLink}" class="aa-link" target="_blank">✈️ FlightAware</a>` : '',
+  ].filter(Boolean).join('');
+
+  return `<div class="airport-advisory">
+    <div class="aa-header">
+      <div>
+        <div class="aa-code">${code} Security Advisory</div>
+        <div class="aa-airport">${data.name}</div>
+      </div>
+      <span style="font-size:1.4rem">🛂</span>
+    </div>
+    <div class="aa-peak">⏰ ${data.peakHours}</div>
+    ${data.tips.map(t => `<div class="aa-tip">${t}</div>`).join('')}
+    <div class="aa-links">${linksHtml}</div>
+  </div>`;
+}
+
+async function refreshFlight(fn, dayIndex) {
+  showToast('Refreshing ' + fn + '…');
+  const container = document.getElementById('flight-status-container-' + dayIndex);
+  if (container) {
+    container.innerHTML = '<div class="loading">Refreshing flight data…</div>';
+    container.innerHTML = await loadFlightStatus(dayIndex);
+  }
+}
+
+// Patch renderDay to inject flight cards on travel days
+const _origRenderDay = renderDay;
+renderDay = async function(i) {
+  _origRenderDay(i);
+  if (TRIP_FLIGHTS[i]) {
+    // Find or create container after day heading
+    const content = document.getElementById('day-content');
+    let container = document.getElementById('flight-status-container-' + i);
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'flight-status-container-' + i;
+      // Insert after first child (day-heading)
+      const heading = content.querySelector('.day-heading');
+      if (heading && heading.nextSibling) {
+        content.insertBefore(container, heading.nextSibling);
+      } else {
+        content.appendChild(container);
+      }
+    }
+    container.innerHTML = '<div class="loading" style="padding:16px;color:#64748B;font-size:0.8rem">Loading flight status…</div>';
+    container.innerHTML = await loadFlightStatus(i);
+  }
+};
 
 // ══════════════════════════════════
 // AI CHAT
