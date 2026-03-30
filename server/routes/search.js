@@ -213,8 +213,8 @@ router.post('/', async (req, res) => {
     });
   }
 
-  // Opening hours query
-  if (q.includes('open') || q.includes('hours') || q.includes('close') || q.includes('timing') || q.includes('when')) {
+  // Opening hours query — only if NOT a food query
+  if (!isFoodQuery(q) && (q.includes('open') || q.includes('hours') || q.includes('close') || q.includes('timing') || q.includes('when'))) {
     return res.json({
       reply: `⏰ **Swiss Restaurant & Shop Hours**\n\nRestaurants:\n• Breakfast: 7:00–10:30\n• Lunch: 12:00–14:00 (kitchens close sharp!)\n• Dinner: 18:30–21:30 (last orders ~21:00)\n• Many close Monday or Tuesday\n\nSupermarkets (Coop/Migros):\n• Mon–Sat: 7:00–21:00\n• Sunday: Often closed or limited hours\n• Train station branches: open 7 days, sometimes till 22:00\n\n💡 Switzerland is strict about hours — don't arrive 10 min before closing and expect a table.`,
       links: deepLinks

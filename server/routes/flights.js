@@ -2,7 +2,8 @@ const router = require('express').Router();
 
 const FLIGHTS = {
   'UA8392': { label: 'Ashok family outbound', date: '2026-04-04', from: 'ATL', to: 'GVA', via: 'YUL', dep: '13:05', arr: '09:55+1', airline: 'United' },
-  'UA749':  { label: 'Ashok family return',   date: '2026-04-11', from: 'GVA', to: 'ATL', via: 'IAD', dep: '11:00', arr: '18:30', airline: 'United' },
+  'UA749':  { label: 'Ashok return (1/2)', date: '2026-04-11', from: 'GVA', to: 'IAD', dep: '11:00', arr: '14:30', airline: 'United' },
+  'UA1635': { label: 'Ashok return (2/2)', date: '2026-04-11', from: 'IAD', to: 'ATL', dep: '22:08', arr: '00:30', airline: 'United' },
   'DL9375': { label: 'Rajesh family outbound (1/3)', date: '2026-04-04', from: 'ATL', to: 'AMS', dep: '22:00', arr: '13:30+1', airline: 'Delta' },
   'DL9435': { label: 'Rajesh family outbound (2/3)', date: '2026-04-05', from: 'AMS', to: 'ZUR', dep: '15:00', arr: '16:30',   airline: 'Delta' },
   'DL9244': { label: 'Rajesh family return (1/3)', date: '2026-04-11', from: 'ZUR', to: 'AMS', dep: '14:00', arr: '15:45',   airline: 'Delta' },

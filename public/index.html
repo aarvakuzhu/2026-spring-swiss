@@ -288,7 +288,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .aa-link { font-size: 0.7rem; color: var(--blue); background: var(--bg); padding: 5px 10px; border-radius: 8px; font-weight: 600; }
 
 /* ── CHAT ── */
-.chat-fab { position: fixed; bottom: calc(60px + env(safe-area-inset-bottom) + 12px); right: 16px; z-index: 300; width: 52px; height: 52px; border-radius: 50%; background: var(--mc); box-shadow: 0 4px 16px rgba(0,0,0,0.2); display: none; align-items: center; justify-content: center; font-size: 1.4rem; transition: transform 0.15s; }
+.chat-fab { display: none !important; }
 .chat-fab.show { display: flex; }
 .chat-fab:active { transform: scale(0.92); }
 .chat-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 301; display: none; }
@@ -425,9 +425,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   </button>
 </nav>
 
-<!-- CHAT -->
-<div class="chat-overlay" id="chatOverlay" onclick="closeChat()"></div>
-<button class="chat-fab" id="chatFab" onclick="openChat()">🤖</button>
+<!-- CHAT (hidden — accessible via Search tab) -->
+<div class="chat-overlay" id="chatOverlay" onclick="closeChat()" style="display:none"></div>
 <div class="chat-drawer" id="chatDrawer">
   <div class="chat-hdr">
     <div class="chat-hdr-info">
@@ -795,7 +794,7 @@ function applyMember(m) {
   document.getElementById('hdrAvatar').textContent = m.avatar;
   document.getElementById('hdrName').textContent = `${m.name} · ${m.family === 'ashok' ? 'Ashok' : 'Rajesh'} family`;
   document.getElementById('hdrSub').textContent = `${m.age} yrs · Switzerland Apr 4–12`;
-  document.getElementById('chatFab').classList.add('show');
+  // chat accessed via Search tab
   document.getElementById('chatWelcome').textContent = m.role === 'kid'
     ? `Hey ${m.name}! 🎉 Ask me anything about Switzerland — what's on your mind?`
     : `Hi ${m.name}! Ask me anything about the trip — itinerary, trains, packing, local tips.`;
@@ -1278,14 +1277,14 @@ function renderBooking() {
 function openChat() {
   document.getElementById('chatDrawer').classList.add('open');
   document.getElementById('chatOverlay').classList.add('open');
-  document.getElementById('chatFab').classList.remove('show');
+
   document.getElementById('chatSub').textContent = `Viewing: ${DAYS[currentDay].short}`;
   setTimeout(()=>document.getElementById('chatInput').focus(),350);
 }
 function closeChat() {
   document.getElementById('chatDrawer').classList.remove('open');
   document.getElementById('chatOverlay').classList.remove('open');
-  document.getElementById('chatFab').classList.add('show');
+  // chat accessed via Search tab
 }
 function sendSuggestion(btn) {
   document.getElementById('chatSuggestions').style.display='none';
@@ -1426,6 +1425,12 @@ function renderSearch() {
 
 
   html += `</div>`;
+
+  // Ask Trip Assistant button
+  html += '<div style="margin-top:16px;background:var(--card);border-radius:var(--radius);padding:14px;text-align:center">';
+  html += '<div style="font-size:0.75rem;color:var(--sub);margin-bottom:10px">Cannot find what you need? Ask the trip assistant.</div>';
+  html += '<button onclick="openChat()" style="background:var(--mc);color:white;border:none;border-radius:10px;padding:10px 20px;font-family:inherit;font-size:0.84rem;font-weight:700;cursor:pointer">🤖 Ask Trip Assistant</button>';
+  html += '</div>';
   document.getElementById('scrollArea').innerHTML = html;
 }
 
