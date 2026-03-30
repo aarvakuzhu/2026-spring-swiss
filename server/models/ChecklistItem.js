@@ -14,12 +14,17 @@ const checklistItemSchema = new mongoose.Schema({
     enum: ['before-travel', 'packing', 'booking', 'day-activity', 'note'],
     default: 'before-travel'
   },
-  dayIndex: { type: Number, default: null }, // null = general, 0–7 = specific day
+  audience: {
+    type: String,
+    enum: ['all', 'adults', 'kids'],
+    default: 'all'
+  },
+  dayIndex: { type: Number, default: null },
   text: { type: String, required: true },
-  addedBy: { type: String },         // member name
-  addedByFamily: { type: String },   // 'ashok' | 'rajesh'
-  relevantFamilies: [{ type: String }], // ['ashok'] | ['rajesh'] | ['ashok','rajesh']
-  completions: [completionSchema],   // one entry per member who completed it
+  addedBy: { type: String },
+  addedByFamily: { type: String },
+  relevantFamilies: [{ type: String }],
+  completions: [completionSchema],
   isBookingRequired: { type: Boolean, default: false },
   bookingUrl: { type: String },
   priority: { type: String, enum: ['high', 'medium', 'low'], default: 'medium' },

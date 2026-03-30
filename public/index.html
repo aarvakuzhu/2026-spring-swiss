@@ -1102,7 +1102,16 @@ function filterChecklist(f) {
 }
 
 function renderChecklist() {
-  const filtered = checklistFilter === 'all' ? checklistData : checklistData.filter(i => i.category === checklistFilter);
+  const isKid = currentMember?.role === 'kid';
+
+  // Filter by audience first
+  const audienceFiltered = checklistData.filter(item => {
+    if (item.audience === 'adults' && isKid) return false;
+    if (item.audience === 'kids' && !isKid) return false;
+    return true;
+  });
+
+  const filtered = checklistFilter === 'all' ? audienceFiltered : audienceFiltered.filter(i => i.category === checklistFilter);
 
   // Group by category
   const groups = {};
@@ -1122,9 +1131,9 @@ function renderChecklist() {
   const priorityOrder = { high: 0, medium: 1, low: 2 };
   let html = '';
 
-  // Show completion summary at top
-  const totalItems = checklistData.filter(i => i.category !== 'note').length;
-  const myDone = checklistData.filter(i => i.category !== 'note' && i.completions?.find(c => c.memberId === currentMember?._id)).length;
+  // Show completion summary at top — only count items visible to this member
+  const totalItems = audienceFiltered.filter(i => i.category !== 'note').length;
+  const myDone = audienceFiltered.filter(i => i.category !== 'note' && i.completions?.find(c => c.memberId === currentMember?._id)).length;
   const pct = totalItems ? Math.round((myDone / totalItems) * 100) : 0;
   html += `<div style="background:#F9F9F7;border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:14px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
@@ -1161,7 +1170,11 @@ function renderChecklist() {
             ${priorityDot}
             <span class="ci-text">${item.text}</span>
           </div>
-          ${item.addedBy ? `<div class="ci-meta">💬 ${item.addedBy}</div>` : ''}
+          <div style="display:flex;gap:5px;margin-top:3px;flex-wrap:wrap">
+            ${item.audience === 'adults' ? `<span style="font-size:0.58rem;background:#EFF6FF;color:#2563EB;padding:1px 5px;border-radius:4px;font-weight:600">👨 Adults</span>` : ''}
+            ${item.audience === 'kids' ? `<span style="font-size:0.58rem;background:#EDE9FE;color:#7C3AED;padding:1px 5px;border-radius:4px;font-weight:600">👧 Kids</span>` : ''}
+            ${item.addedBy ? `<span class="ci-meta" style="margin:0">💬 ${item.addedBy}</span>` : ''}
+          </div>
           ${otherCheckers.length ? `<div class="ci-checkers">✓ Done by: ${otherCheckers.join(', ')}</div>` : ''}
           ${item.isBookingRequired && item.bookingUrl ? `<a href="${item.bookingUrl}" class="ci-book" target="_blank">🔗 Book now ↗</a>` : ''}
         </div>
