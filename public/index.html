@@ -720,16 +720,25 @@ function getPersonalTips(member, dayIndex) {
 // ══════════════════════════════════
 // MEMBER SELECTION
 // ══════════════════════════════════
-async function loadMembers() {
+async function loadMembers(attempt = 1) {
+  const el = document.getElementById('member-list');
   try {
+    el.innerHTML = attempt > 1
+      ? `<div style="color:#aaa;text-align:center;font-size:0.8rem;padding:16px">Connecting… (attempt ${attempt})</div>`
+      : `<div style="color:#aaa;text-align:center;font-size:0.8rem;padding:16px">Loading family members…</div>`;
+
     const res = await fetch('/api/members');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
     allMembers = await res.json();
 
-    if (allMembers.length === 0) {
-      document.getElementById('member-list').innerHTML = `
-        <div style="color:#aaa;text-align:center;font-size:0.85rem;padding:20px">
-          No family members set up yet.<br>Please share the family details so we can add them!
-        </div>`;
+    if (!Array.isArray(allMembers) || allMembers.length === 0) {
+      // Retry up to 5 times — server may still be waking up
+      if (attempt < 5) {
+        setTimeout(() => loadMembers(attempt + 1), 2000);
+        return;
+      }
+      el.innerHTML = `<div style="color:#aaa;text-align:center;font-size:0.85rem;padding:20px">
+        No members found.<br><a href="/api/seed/members/swiss2026-seed-now" style="color:#60A5FA">Tap here to seed members</a></div>`;
       return;
     }
 
@@ -747,9 +756,18 @@ async function loadMembers() {
       rajeshMembers.forEach(m => { html += memberBtn(m); });
       html += '</div>';
     }
-    document.getElementById('member-list').innerHTML = html;
+    el.innerHTML = html;
   } catch (e) {
-    document.getElementById('member-list').innerHTML = `<div style="color:#f87171;text-align:center">Could not load members. Is the server running?</div>`;
+    if (attempt < 5) {
+      setTimeout(() => loadMembers(attempt + 1), 2000);
+    } else {
+      el.innerHTML = `<div style="color:#f87171;text-align:center;font-size:0.8rem;padding:16px">
+        Could not connect to server.<br>
+        <button onclick="loadMembers(1)" style="margin-top:10px;padding:8px 16px;background:#2563EB;color:white;border:none;border-radius:8px;cursor:pointer;font-family:inherit">
+          Retry
+        </button>
+      </div>`;
+    }
   }
 }
 
