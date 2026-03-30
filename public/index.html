@@ -1380,9 +1380,15 @@ async function sendChat(overrideText) {
     const data = await response.json();
     removeTyping();
 
-    const reply = data.reply || 'Sorry, I could not get a response. Try again!';
-    appendMessage('assistant', reply);
-    chatHistory.push({ role: 'assistant', content: reply });
+    if (!response.ok || data.error) {
+      const errMsg = data.detail || data.error || ('HTTP ' + response.status);
+      appendMessage('assistant', '⚠️ Error: ' + errMsg);
+      console.error('Chat error:', data);
+    } else {
+      const reply = data.reply || 'No response text returned.';
+      appendMessage('assistant', reply);
+      chatHistory.push({ role: 'assistant', content: reply });
+    }
 
     // Keep history manageable
     if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
