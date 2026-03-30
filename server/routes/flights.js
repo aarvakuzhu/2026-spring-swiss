@@ -33,7 +33,7 @@ const AIRPORT_ADVISORIES = {
     ],
     peakHours: '6–8 AM and 4–7 PM busiest',
     flightAwareLink: 'https://www.flightaware.com/live/airport/LSGG',
-    officialLink: 'https://www.gva.ch/en/desktopdefault.aspx/tabid-58/',
+    officialLink: 'https://www.gva.ch/en/Travelers/Passenger-information/security',
   },
   'ZUR': {
     name: 'Zurich Airport',

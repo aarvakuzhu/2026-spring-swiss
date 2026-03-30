@@ -588,7 +588,7 @@ const DAYS = [
     weather: { icon:'🌨', temp:'−3 to 2°C (summit)', desc:'Summit conditions — warm layers essential!', forecast:'https://www.meteoswiss.admin.ch/local-forecasts/schilthorn.html', webcam:'https://schilthorn.swiss/en/pizgloria/Livecam' },
     trains: [
       { time:'9:00 AM', family:'shared', desc:'Wilderswil → Interlaken OST → Lauterbrunnen', note:'BOB train · ~30 min total', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Lauterbrunnen&von=Wilderswil&datum=06.04.2026&zeit=09:00&abFahrt=true' },
-      { time:'9:45 AM', family:'shared', desc:'Lauterbrunnen → Grütschalp → Mürren → Schilthorn', note:'Cable car + mountain railway · ~1h total', sbb:'https://www.schilthorn.ch/en/planning/getting-here/from-lauterbrunnen' },
+      { time:'9:45 AM', family:'shared', desc:'Lauterbrunnen → Grütschalp → Mürren → Schilthorn', note:'Cable car + mountain railway · ~1h total', sbb:'https://schilthorn.ch/en/Infos/Arrival' },
       { time:'3:00 PM', family:'shared', desc:'Schilthorn → Staubbach Falls (Lauterbrunnen)', note:'Walk from village · 5 min · Free' },
       { time:'5:00 PM', family:'shared', desc:'Lauterbrunnen → Interlaken OST', note:'Don\'t miss last train! ~8 PM', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Interlaken+Ost&von=Lauterbrunnen&datum=06.04.2026&zeit=17:00&abFahrt=true' },
     ],
@@ -623,10 +623,10 @@ const DAYS = [
     date: 'Tuesday, April 8', emoji: '🏔', short: 'Apr 8 🏔',
     location: 'Grindelwald → Zermatt → Tasch',
     split: false,
-    weather: { icon:'⛰', temp:'0–8°C', desc:'Matterhorn often clear in morning — go early!', forecast:'https://www.meteoswiss.admin.ch/local-forecasts/zermatt/3920.html', webcam:'https://www.zermatt.ch/en/media/webcams', webcam2:'https://www.matterhornparadise.ch/en/mountain/webcam' },
+    weather: { icon:'⛰', temp:'0–8°C', desc:'Matterhorn often clear in morning — go early!', forecast:'https://www.meteoswiss.admin.ch/local-forecasts/zermatt/3920.html', webcam:'https://www.zermatt.ch/en/media/webcams', webcam2:'https://www.zermatt.ch/en/media/webcams' },
     trains: [
       { time:'9:00 AM', family:'shared', desc:'Grindelwald → Interlaken OST → Brig → Zermatt', note:'~4h 30 min · Change at Visp or Brig · Scenic Rhône Valley', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Zermatt&von=Grindelwald&datum=08.04.2026&zeit=09:00&abFahrt=true' },
-      { time:'1:00 PM', family:'shared', desc:'Zermatt → Klein Matterhorn Cable Car', note:'Matterhorn Glacier Paradise · 3,883m · World\'s highest cable car', sbb:'https://www.matterhornparadise.ch/en/experience/tickets-prices' },
+      { time:'1:00 PM', family:'shared', desc:'Zermatt → Klein Matterhorn Cable Car', note:'Matterhorn Glacier Paradise · 3,883m · World\'s highest cable car', sbb:'https://www.matterhornparadise.ch/en/tickets-and-prices/tickets' },
       { time:'5:00 PM', family:'shared', desc:'Zermatt → Tasch (train, ~12 min)', note:'Cars not allowed in Zermatt — stay in Tasch', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=T%C3%A4sch&von=Zermatt&datum=08.04.2026&zeit=17:00&abFahrt=true' },
     ],
     activities: [
@@ -1304,16 +1304,16 @@ async function deleteNote(id) {
 // BOOKING TAB
 // ══════════════════════════════════
 const BOOKINGS = [
-  { title:'Swiss Travel Pass', sub:'swisstravelsystem.com — activate on arrival', url:'https://www.swisstravelsystem.com/en/swiss-travel-pass/', needed:true },
-  { title:'GoldenPass Express Reservation', sub:'Geneva → Montreux → Interlaken · Apr 5 · Ashok family', url:'https://www.goldenpass.ch/en/goldenpass-express/reservation', needed:true, family:'ashok' },
-  { title:'Schilthorn — Thrill Walk + Piz Gloria', sub:'Apr 6 · Both families', url:'https://www.schilthorn.ch/en/planning/tickets/online-tickets', needed:true },
+  { title:'Swiss Travel Pass', sub:'swisstravelsystem.com — activate on arrival', url:'https://www.sbb.ch/en/tickets-offers/tickets/guests-abroad/swiss-travel-pass.html', needed:true },
+  { title:'GoldenPass Express Reservation', sub:'Geneva → Montreux → Interlaken · Apr 5 · Ashok family', url:'https://www.goldenpass.ch/en', needed:true, family:'ashok' },
+  { title:'Schilthorn — Thrill Walk + Piz Gloria', sub:'Apr 6 · Both families', url:'https://shop.schilthorn.ch/en/single-tickets', needed:true },
   { title:'Grindelwald First — Cliff Walk Gondola', sub:'Apr 7 · Both families', url:'https://www.jungfrau.ch/en-gb/grindelwald-first/tickets/', needed:true },
-  { title:'Klein Matterhorn — Glacier Paradise', sub:'Apr 8 · Both families', url:'https://www.matterhornparadise.ch/en/experience/tickets-prices', needed:true },
+  { title:'Klein Matterhorn — Glacier Paradise', sub:'Apr 8 · Both families', url:'https://www.matterhornparadise.ch/en/tickets-and-prices/tickets', needed:true },
   { title:'Lindt Home of Chocolate', sub:'Apr 10 · Zürich · Pre-book strongly recommended', url:'https://www.lindt-home-of-chocolate.com/en/tickets/', needed:true },
   { title:'FIFA Museum Tickets', sub:'Apr 10 · Zürich · Online discount vs door', url:'https://www.fifa.com/fifamuseum/tickets', needed:false },
-  { title:'SGV Lake Lucerne Boat', sub:'Apr 9 · Evening cruise', url:'https://www.lakelucerne.ch/en/services/timetable-and-tickets/', needed:false },
-  { title:'SBB Mobile App', sub:'Live timetables, tickets, platform info', url:'https://www.sbb.ch/en/travel-information/apps/sbb-mobile.html', needed:false },
-  { title:'MeteoSwiss App', sub:'Official Swiss weather — mountain forecasts', url:'https://www.meteoswiss.admin.ch/home/measurement-and-forecasting-systems/warning-and-information-products/meteoswiss-app.html', needed:false },
+  { title:'SGV Lake Lucerne Boat', sub:'Apr 9 · Evening cruise', url:'https://www.lakelucerne.ch/en/timetable-and-tickets/', needed:false },
+  { title:'SBB Mobile App', sub:'Live timetables, tickets, platform info', url:'https://www.sbb.ch/en/timetable/mobile-apps.html', needed:false },
+  { title:'MeteoSwiss App', sub:'Official Swiss weather — mountain forecasts', url:'https://www.meteoswiss.admin.ch/services-and-publications/applications/meteoswiss-app.html', needed:false },
 ];
 
 function renderBookingTab() {
