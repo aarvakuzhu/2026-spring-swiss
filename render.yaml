@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: swiss-trip-2026
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: MONGODB_URI
+        sync: false          # set manually in Render dashboard — do not commit secret
+      - key: SESSION_SECRET
+        sync: false
+      - key: PORT
+        value: 3000
+    healthCheckPath: /api/health
