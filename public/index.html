@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Switzerland 2026 🇨🇭</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #D0021B;
+  --white: #FAFAF8;
+  --ink: #1A1A1A;
+  --muted: #6B6B6B;
+  --line: #E2E2DC;
+  --ashok: #2563EB;
+  --rajesh: #059669;
+  --shared: #7C3AED;
+  --card-bg: #FFFFFF;
+  --tag-bg: #F0F0EC;
+  --member-color: #2563EB; /* overridden per member */
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--ink); max-width: 480px; margin: 0 auto; min-height: 100vh; }
+
+/* ── WHO ARE YOU screen ── */
+#who-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+  background: var(--ink);
+}
+#who-screen h1 {
+  font-family: 'Playfair Display', serif;
+  color: var(--white);
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 6px;
+}
+#who-screen .sub { color: #aaa; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; margin-bottom: 32px; }
+.family-group { width: 100%; margin-bottom: 20px; }
+.family-group-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  padding-left: 4px;
+}
+.family-group-label.ashok { color: #60A5FA; }
+.family-group-label.rajesh { color: #34D399; }
+.member-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  background: #2A2A2A;
+  border: 1px solid #333;
+  border-radius: 12px;
+  cursor: pointer;
+  color: var(--white);
+  transition: all 0.15s;
+  text-align: left;
+}
+.member-btn:active { background: #333; transform: scale(0.98); }
+.member-avatar { font-size: 1.6rem; width: 40px; text-align: center; }
+.member-info .member-name { font-size: 0.95rem; font-weight: 600; }
+.member-info .member-meta { font-size: 0.72rem; color: #888; margin-top: 2px; }
+.member-info .member-interests { font-size: 0.68rem; color: #60A5FA; margin-top: 3px; }
+
+/* ── MAIN APP ── */
+#app { display: none; }
+
+/* Header */
+.app-header {
+  background: var(--ink);
+  color: var(--white);
+  padding: 16px 16px 12px;
+  position: sticky; top: 0; z-index: 100;
+}
+.header-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.header-greeting { font-family: 'Playfair Display', serif; font-size: 1.1rem; }
+.header-sub { font-size: 0.68rem; color: #aaa; margin-top: 2px; letter-spacing: 0.04em; }
+.switch-btn {
+  background: #333; border: none; color: #aaa; border-radius: 8px;
+  padding: 6px 10px; font-size: 0.68rem; cursor: pointer; font-family: 'DM Sans', sans-serif;
+}
+.switch-btn:active { background: #444; }
+
+/* Day nav */
+.day-nav { display: flex; overflow-x: auto; gap: 6px; padding: 10px 16px; background: var(--ink); border-top: 1px solid #2a2a2a; scrollbar-width: none; }
+.day-nav::-webkit-scrollbar { display: none; }
+.day-btn { flex: 0 0 auto; background: transparent; border: 1px solid #444; color: #aaa; border-radius: 20px; padding: 5px 12px; font-size: 0.7rem; font-family: 'DM Sans', sans-serif; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+.day-btn.active { background: var(--member-color); border-color: var(--member-color); color: white; font-weight: 600; }
+
+/* Tab bar */
+.tab-bar { display: flex; background: white; border-bottom: 2px solid var(--line); position: sticky; top: 92px; z-index: 99; }
+.tab-btn { flex: 1; padding: 10px 4px; font-size: 0.7rem; font-family: 'DM Sans', sans-serif; background: none; border: none; cursor: pointer; color: var(--muted); font-weight: 500; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+.tab-btn.active { color: var(--member-color, var(--ashok)); border-bottom-color: var(--member-color, var(--ashok)); font-weight: 600; }
+
+/* Content */
+.content { padding: 14px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Day heading */
+.day-heading { margin-bottom: 14px; }
+.day-heading h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; }
+.location-tag { display: inline-block; background: var(--tag-bg); border-radius: 4px; padding: 3px 8px; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-top: 5px; }
+
+/* Personalized banner */
+.personal-banner {
+  background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 14px;
+  color: white;
+  border-left: 4px solid var(--member-color, var(--ashok));
+}
+.personal-banner .pb-label { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: #aaa; margin-bottom: 6px; }
+.personal-banner .pb-text { font-size: 0.85rem; line-height: 1.5; }
+.personal-banner .pb-tips { margin-top: 8px; }
+.personal-banner .pb-tip { font-size: 0.75rem; color: #ccc; display: flex; gap: 6px; padding: 2px 0; }
+.personal-banner .pb-tip::before { content: '★'; color: #F59E0B; font-size: 0.65rem; flex-shrink: 0; margin-top: 1px; }
+
+/* Split view */
+.split-banner { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.split-card { border-radius: 10px; padding: 10px 12px; font-size: 0.78rem; }
+.split-card.ashok { background: #EFF6FF; border-left: 3px solid var(--ashok); }
+.split-card.rajesh { background: #ECFDF5; border-left: 3px solid var(--rajesh); }
+.split-card .family-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+.split-card.ashok .family-label { color: var(--ashok); }
+.split-card.rajesh .family-label { color: var(--rajesh); }
+.split-card p { font-size: 0.75rem; color: var(--ink); line-height: 1.4; }
+
+/* Sections */
+.section { border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+.section-label { font-size: 0.63rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.section.weather { background: #EEF4FF; }
+.section.trains { background: #FFF7ED; }
+.section.activities { background: #F9F9F7; border: 1px solid var(--line); }
+.section.hotel { background: #F0FDF4; }
+.section.rainy { background: #FEF3C7; }
+
+/* Weather */
+.weather-row { display: flex; align-items: center; gap: 10px; }
+.weather-icon { font-size: 2rem; }
+.weather-temp { font-size: 1.4rem; font-weight: 600; }
+.weather-desc { font-size: 0.76rem; color: var(--muted); }
+.ext-link { display: inline-flex; align-items: center; gap: 5px; margin-top: 8px; background: white; border-radius: 8px; padding: 8px 12px; font-size: 0.73rem; font-weight: 500; width: 100%; justify-content: center; text-decoration: none; }
+.ext-link.weather-lnk { border: 1px solid #C7D7F5; color: #2563EB; }
+.ext-link.maps-lnk { border: 1px solid #BBF7D0; color: #059669; }
+
+/* Trains */
+.train-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #FDE8C8; }
+.train-item:last-child { border-bottom: none; padding-bottom: 0; }
+.train-time { font-weight: 600; font-size: 0.82rem; min-width: 52px; color: #92400E; }
+.train-route { flex: 1; }
+.train-desc { font-size: 0.8rem; color: var(--ink); line-height: 1.35; }
+.train-note { font-size: 0.68rem; color: var(--muted); margin-top: 1px; }
+.sbb-btn { display: inline-flex; align-items: center; gap: 3px; background: #D97706; color: white; border-radius: 6px; padding: 4px 8px; font-size: 0.63rem; font-weight: 600; text-decoration: none; white-space: nowrap; flex-shrink: 0; }
+
+/* Activities */
+.activity-item { display: flex; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line); }
+.activity-item:last-child { border-bottom: none; }
+.act-time { font-size: 0.73rem; color: var(--muted); min-width: 50px; font-weight: 500; }
+.act-body { flex: 1; }
+.act-title { font-size: 0.82rem; font-weight: 500; }
+.act-note { font-size: 0.68rem; color: var(--muted); margin-top: 1px; }
+.act-badge { font-size: 0.58rem; padding: 1px 5px; border-radius: 4px; font-weight: 700; display: inline-block; margin-left: 4px; }
+.badge-free { background: #D1FAE5; color: #065F46; }
+.badge-book { background: #FEE2E2; color: #991B1B; }
+.badge-ticket { background: #FEF3C7; color: #92400E; }
+.badge-kids { background: #EDE9FE; color: #5B21B6; }
+
+/* Hotel */
+.hotel-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 2px; }
+.hotel-addr { font-size: 0.74rem; color: var(--muted); margin-bottom: 10px; }
+
+/* Rainy */
+.rainy ul { list-style: none; }
+.rainy ul li { padding: 5px 0; font-size: 0.78rem; border-bottom: 1px solid #FDE68A; display: flex; gap: 8px; }
+.rainy ul li:last-child { border-bottom: none; }
+.rainy ul li::before { content: '☂'; flex-shrink: 0; }
+
+/* Family pill */
+.family-pill { display: inline-block; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; padding: 1px 5px; margin-bottom: 3px; }
+.pill-ashok { background: #DBEAFE; color: var(--ashok); }
+.pill-rajesh { background: #D1FAE5; color: var(--rajesh); }
+.pill-shared { background: #EDE9FE; color: var(--shared); }
+
+/* ── CHECKLIST TAB ── */
+.checklist-filters { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
+.checklist-filters::-webkit-scrollbar { display: none; }
+.filter-btn { flex: 0 0 auto; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--line); background: white; font-size: 0.7rem; cursor: pointer; font-family: 'DM Sans', sans-serif; color: var(--muted); transition: all 0.15s; }
+.filter-btn.active { background: var(--member-color, var(--ashok)); border-color: var(--member-color, var(--ashok)); color: white; font-weight: 600; }
+
+.checklist-group { margin-bottom: 16px; }
+.cg-label { font-size: 0.63rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; padding-left: 2px; }
+
+.checklist-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: white; border: 1px solid var(--line);
+  border-radius: 10px; padding: 11px 12px; margin-bottom: 7px;
+  transition: opacity 0.2s;
+}
+.checklist-item.done { opacity: 0.5; }
+.checklist-item.done .ci-text { text-decoration: line-through; }
+.ci-check {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 2px solid var(--line); flex-shrink: 0;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s; margin-top: 1px;
+}
+.ci-check.checked { background: var(--member-color, var(--ashok)); border-color: var(--member-color, var(--ashok)); }
+.ci-check.checked::after { content: '✓'; color: white; font-size: 0.7rem; font-weight: 700; }
+.ci-body { flex: 1; }
+.ci-text { font-size: 0.82rem; line-height: 1.4; }
+.ci-meta { font-size: 0.65rem; color: var(--muted); margin-top: 3px; }
+.ci-checkers { font-size: 0.62rem; color: #059669; margin-top: 2px; }
+.ci-book { display: inline-flex; align-items: center; gap: 3px; margin-top: 5px; background: #FEE2E2; color: #DC2626; border-radius: 5px; padding: 3px 7px; font-size: 0.65rem; font-weight: 600; text-decoration: none; }
+
+.add-item-form { background: white; border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-top: 10px; }
+.add-item-form input, .add-item-form select {
+  width: 100%; padding: 9px 12px; border: 1px solid var(--line);
+  border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+  color: var(--ink); background: var(--white); margin-bottom: 8px;
+}
+.add-item-form input:focus, .add-item-form select:focus { outline: none; border-color: var(--member-color, var(--ashok)); }
+.add-btn { width: 100%; padding: 10px; border: none; border-radius: 8px; background: var(--member-color, var(--ashok)); color: white; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.82rem; cursor: pointer; }
+.add-btn:active { opacity: 0.85; }
+
+/* ── NOTES TAB ── */
+.note-card { background: white; border: 1px solid var(--line); border-radius: 10px; padding: 12px; margin-bottom: 8px; }
+.note-card.pinned { border-color: #F59E0B; background: #FFFBEB; }
+.note-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+.note-author { font-size: 0.65rem; font-weight: 600; color: var(--muted); }
+.note-pin { font-size: 0.7rem; cursor: pointer; }
+.note-text { font-size: 0.82rem; line-height: 1.5; }
+.note-type { display: inline-block; font-size: 0.6rem; font-weight: 700; padding: 1px 5px; border-radius: 4px; margin-top: 5px; }
+.note-type.tip { background: #D1FAE5; color: #065F46; }
+.note-type.warning { background: #FEE2E2; color: #991B1B; }
+.note-type.interest { background: #EDE9FE; color: #5B21B6; }
+.note-type.note { background: var(--tag-bg); color: var(--muted); }
+.note-delete { font-size: 0.65rem; color: #ccc; cursor: pointer; padding: 2px 5px; }
+.note-delete:hover { color: var(--red); }
+
+.add-note-form { background: white; border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-top: 10px; }
+.add-note-form textarea { width: 100%; padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; color: var(--ink); min-height: 70px; resize: none; margin-bottom: 8px; }
+.add-note-form textarea:focus { outline: none; border-color: var(--member-color, var(--ashok)); }
+.note-form-row { display: flex; gap: 8px; }
+.note-form-row select { flex: 1; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: var(--ink); }
+
+/* ── BOOKING TAB ── */
+.booking-card { display: flex; align-items: center; justify-content: space-between; background: white; border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; text-decoration: none; color: var(--ink); }
+.booking-card:active { background: #F5F5F0; }
+.bc-left .bc-title { font-size: 0.82rem; font-weight: 600; }
+.bc-left .bc-sub { font-size: 0.68rem; color: var(--muted); margin-top: 2px; }
+.bc-badge { font-size: 0.62rem; font-weight: 700; padding: 2px 7px; border-radius: 10px; }
+.bc-badge.needed { background: #FEE2E2; color: #DC2626; }
+.bc-badge.done { background: #D1FAE5; color: #065F46; }
+.bc-arrow { color: var(--red); font-size: 1.1rem; margin-left: 8px; }
+
+/* ── LOADING / TOAST ── */
+.loading { text-align: center; padding: 40px; color: var(--muted); font-size: 0.85rem; }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--ink); color: white; padding: 10px 18px; border-radius: 20px; font-size: 0.78rem; z-index: 9999; opacity: 0; transition: opacity 0.2s; pointer-events: none; white-space: nowrap; }
+.toast.show { opacity: 1; }
+
+/* Legend */
+.legend { display: flex; gap: 14px; padding: 10px 16px; border-top: 1px solid var(--line); font-size: 0.66rem; color: var(--muted); justify-content: center; flex-wrap: wrap; }
+.legend span { display: flex; align-items: center; gap: 4px; }
+.dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     WHO ARE YOU SCREEN
+══════════════════════════════════ -->
+<div id="who-screen">
+  <h1>🇨🇭 Switzerland 2026</h1>
+  <div class="sub">April 4–12 · Who's planning?</div>
+  <div id="member-list">
+    <div class="loading">Loading family members…</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     MAIN APP
+══════════════════════════════════ -->
+<div id="app">
+
+  <header class="app-header">
+    <div class="header-top">
+      <div>
+        <div class="header-greeting" id="header-greeting">Hello!</div>
+        <div class="header-sub" id="header-sub">Switzerland · Apr 4–12</div>
+      </div>
+      <button class="switch-btn" onclick="switchMember()">Switch ↩</button>
+    </div>
+  </header>
+
+  <nav class="day-nav" id="dayNav">
+    <button class="day-btn active" onclick="showDay(0)">Apr 4 ✈</button>
+    <button class="day-btn" onclick="showDay(1)">Apr 5 🚂</button>
+    <button class="day-btn" onclick="showDay(2)">Apr 6 ⛰</button>
+    <button class="day-btn" onclick="showDay(3)">Apr 7 🧗</button>
+    <button class="day-btn" onclick="showDay(4)">Apr 8 🏔</button>
+    <button class="day-btn" onclick="showDay(5)">Apr 9 🚢</button>
+    <button class="day-btn" onclick="showDay(6)">Apr 10 🏛</button>
+    <button class="day-btn" onclick="showDay(7)">Apr 11 ✈</button>
+  </nav>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="showTab('itinerary')">📅 Day Plan</button>
+    <button class="tab-btn" onclick="showTab('checklist')">✅ Checklist</button>
+    <button class="tab-btn" onclick="showTab('notes')">📝 Notes</button>
+    <button class="tab-btn" onclick="showTab('booking')">🔗 Book</button>
+  </div>
+
+  <div class="content">
+
+    <!-- ── ITINERARY TAB ── -->
+    <div class="tab-panel active" id="tab-itinerary">
+      <div id="day-content">
+        <div class="loading">Loading…</div>
+      </div>
+    </div>
+
+    <!-- ── CHECKLIST TAB ── -->
+    <div class="tab-panel" id="tab-checklist">
+      <div class="checklist-filters" id="checklist-filters">
+        <button class="filter-btn active" onclick="filterChecklist('all')">All</button>
+        <button class="filter-btn" onclick="filterChecklist('before-travel')">Pre-trip</button>
+        <button class="filter-btn" onclick="filterChecklist('packing')">Packing</button>
+        <button class="filter-btn" onclick="filterChecklist('booking')">Booking</button>
+        <button class="filter-btn" onclick="filterChecklist('day-activity')">Day Of</button>
+        <button class="filter-btn" onclick="filterChecklist('note')">Areas/Notes</button>
+      </div>
+      <div id="checklist-content"><div class="loading">Loading checklist…</div></div>
+      <div class="add-item-form">
+        <div class="section-label" style="margin-bottom:10px">＋ Add Item</div>
+        <input type="text" id="new-item-text" placeholder="e.g. Buy travel insurance…">
+        <select id="new-item-category">
+          <option value="before-travel">Pre-trip</option>
+          <option value="packing">Packing</option>
+          <option value="booking">Booking needed</option>
+          <option value="day-activity">Day-of activity</option>
+          <option value="note">Area to explore / note</option>
+        </select>
+        <button class="add-btn" onclick="addChecklistItem()">Add to shared checklist</button>
+      </div>
+    </div>
+
+    <!-- ── NOTES TAB ── -->
+    <div class="tab-panel" id="tab-notes">
+      <div style="margin-bottom:10px;">
+        <div class="section-label">Notes for <span id="notes-day-label">all days</span></div>
+      </div>
+      <div id="notes-content"><div class="loading">Loading notes…</div></div>
+      <div class="add-note-form">
+        <div class="section-label" style="margin-bottom:8px">＋ Add Note / Tip</div>
+        <textarea id="new-note-text" placeholder="e.g. Best photo spot at Rifelsee is at sunrise…"></textarea>
+        <div class="note-form-row">
+          <select id="new-note-type">
+            <option value="note">General note</option>
+            <option value="tip">Tip 💡</option>
+            <option value="warning">Warning ⚠️</option>
+            <option value="interest">Point of interest ⭐</option>
+          </select>
+          <button class="add-btn" style="flex:0 0 auto;width:auto;padding:8px 14px" onclick="addNote()">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BOOKING TAB ── -->
+    <div class="tab-panel" id="tab-booking">
+      <div class="section-label" style="margin-bottom:10px">🎫 Reservations & Tickets</div>
+      <div id="booking-content"></div>
+    </div>
+
+  </div><!-- /content -->
+
+  <div class="legend">
+    <span><span class="dot" style="background:var(--ashok)"></span>Ashok family</span>
+    <span><span class="dot" style="background:var(--rajesh)"></span>Rajesh family</span>
+    <span><span class="dot" style="background:var(--shared)"></span>Shared</span>
+  </div>
+
+</div><!-- /app -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════
+// STATE
+// ══════════════════════════════════
+let currentMember = null;
+let allMembers = [];
+let currentDay = 0;
+let currentTab = 'itinerary';
+let checklistFilter = 'all';
+let checklistData = [];
+let notesData = [];
+
+// ══════════════════════════════════
+// TRIP DATA
+// ══════════════════════════════════
+const DAYS = [
+  {
+    date: 'Friday, April 4', emoji: '✈', short: 'Apr 4 ✈',
+    location: 'Atlanta → Switzerland',
+    split: true,
+    ashokNote: '1:05 PM depart ATL\nUA8392 · ATL→YUL→GVA\nArrives Geneva morning Apr 5',
+    rajeshNote: '10:00 PM depart ATL\nKLM · ATL→AMS→ZUR\nArrives Zurich morning Apr 5',
+    weather: null,
+    trains: [
+      { time:'1:05 PM', family:'ashok', desc:'United UA8392 — ATL → YUL → GVA', note:'Departs ATL · Arrives Geneva morning Apr 5', sbb:'https://www.united.com' },
+      { time:'10:00 PM', family:'rajesh', desc:'KLM — ATL → AMS → ZUR', note:'Departs ATL · Arrives Zurich morning Apr 5', sbb:'https://www.klm.com' },
+    ],
+    activities: [
+      { time:'Before', title:'Activate Swiss Travel Pass on Apr 5', note:'Valid SBB trains, boats, mountain railways, many museums' },
+      { time:'Before', title:'Download SBB Mobile App', note:'Live schedules, platform info, QR tickets', badge:'free' },
+      { time:'Before', title:'Schilthorn & Grindelwald First tickets', note:'Pre-book online — sell out!', badge:'book', kids: true },
+    ],
+    hotel: null,
+    rainy: null,
+  },
+  {
+    date: 'Saturday, April 5', emoji: '🚂', short: 'Apr 5 🚂',
+    location: 'Arrivals → Interlaken → Wilderswil',
+    split: true,
+    ashokNote: '9:55 AM arrive GVA\nGoldenPass Express\nGVA → Montreux → Interlaken\n~12:30 PM train',
+    rajeshNote: 'Morning rest in ZUR\nIC train afternoon\nZUR → Bern → Interlaken\n~5:00 PM',
+    weather: { icon:'⛅', temp:'8–14°C', desc:'Partly cloudy · April average', forecast:'https://www.meteoswiss.admin.ch/local-forecasts/interlaken/3800.html#forecast-tab=day', webcam:null },
+    trains: [
+      { time:'12:30 PM', family:'ashok', desc:'GoldenPass Express — Geneva → Montreux → Interlaken OST', note:'~3h · Panoramic windows · Reservation recommended', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Interlaken+Ost&von=Gen%C3%A8ve&via=Montreux&datum=05.04.2026&zeit=12:30&abFahrt=true' },
+      { time:'5:00 PM', family:'rajesh', desc:'IC — Zurich HB → Bern → Interlaken OST', note:'~2h · Direct IC · Every 30 min', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Interlaken+Ost&von=Z%C3%BCrich+HB&datum=05.04.2026&zeit=17:00&abFahrt=true' },
+      { time:'8:00 PM', family:'shared', desc:'BOB — Interlaken OST → Wilderswil', note:'~6 min · Last train ~10:30 PM', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Wilderswil&von=Interlaken+Ost&datum=05.04.2026&zeit=20:00&abFahrt=true' },
+    ],
+    activities: [
+      { time:'5:00 PM', title:'Interlaken OST — Hardrkulm view of 2 lakes', note:'Thunersee and Brienzersee · Beautiful even in bad weather', badge:'free' },
+      { time:'9:00 PM', title:'Check in — Alpenrose Hotel & Gardens', note:'Both families converge here tonight', kids: true },
+    ],
+    hotel: { name:'Alpenrose Hotel and Gardens', addr:'Kirchgasse 72a, 3812 Wilderswil, Switzerland', maps:'https://maps.google.com/?q=Alpenrose+Hotel+Wilderswil+Kirchgasse+72a+3812', family:'shared' },
+    rainy: ['Jungfraupark — indoor rides & dinosaurs (kids love this!)', 'Höhematte Park stroll', 'Funky Chocolate Club workshop — pre-book', 'Interlaken Kunsthalle gallery'],
+  },
+  {
+    date: 'Sunday, April 6', emoji: '⛰', short: 'Apr 6 ⛰',
+    location: 'Birg · Schilthorn · Lauterbrunnen · Interlaken',
+    split: false,
+    weather: { icon:'🌨', temp:'−3 to 2°C (summit)', desc:'Summit conditions — warm layers essential!', forecast:'https://www.meteoswiss.admin.ch/local-forecasts/schilthorn/3800.html', webcam:'https://www.schilthorn.ch/en/mountain/weather-webcam/webcam' },
+    trains: [
+      { time:'9:00 AM', family:'shared', desc:'Wilderswil → Interlaken OST → Lauterbrunnen', note:'BOB train · ~30 min total', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Lauterbrunnen&von=Wilderswil&datum=06.04.2026&zeit=09:00&abFahrt=true' },
+      { time:'9:45 AM', family:'shared', desc:'Lauterbrunnen → Grütschalp → Mürren → Schilthorn', note:'Cable car + mountain railway · ~1h total', sbb:'https://www.schilthorn.ch/en/planning/getting-here/from-lauterbrunnen' },
+      { time:'3:00 PM', family:'shared', desc:'Schilthorn → Staubbach Falls (Lauterbrunnen)', note:'Walk from village · 5 min · Free' },
+      { time:'5:00 PM', family:'shared', desc:'Lauterbrunnen → Interlaken OST', note:'Don\'t miss last train! ~8 PM', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Interlaken+Ost&von=Lauterbrunnen&datum=06.04.2026&zeit=17:00&abFahrt=true' },
+    ],
+    activities: [
+      { time:'9:00 AM', title:'Thrill Walk — Birg', note:'Glass walkway on cliff face · Vertiginous views', badge:'ticket', kids: true },
+      { time:'11:00 AM', title:'Piz Gloria — Schilthorn Summit', note:'Rotating restaurant · 007 Bond Museum · 360° Alpine views', badge:'ticket', kids: true },
+      { time:'12:00 PM', title:'007 Bond Museum', note:'On Her Majesty\'s Secret Service was filmed here', badge:'free' },
+      { time:'3:00 PM', title:'Staubbach Falls — Lauterbrunnen', note:'297m free-falling waterfall · Walk behind it', badge:'free', kids: true },
+      { time:'5:00 PM', title:'Interlaken — View of 2 Lakes (Hardrkulm)', note:'Last train back 8 PM', badge:'free' },
+    ],
+    hotel: { name:'Alpenrose Hotel and Gardens', addr:'Kirchgasse 72a, 3812 Wilderswil, Switzerland', maps:'https://maps.google.com/?q=Alpenrose+Hotel+Wilderswil+Kirchgasse+72a+3812', family:'shared' },
+    rainy: ['Lauterbrunnen Valley walk — beautiful even in rain', 'Trümmelbach Falls — indoor waterfall inside mountain!', 'Mürren village walk — car-free cozy cafés', 'Postpone Schilthorn: go early morning for better visibility'],
+  },
+  {
+    date: 'Monday, April 7', emoji: '🧗', short: 'Apr 7 🧗',
+    location: 'Grindelwald · First Cliff Walk',
+    split: false,
+    weather: { icon:'🏔', temp:'2–10°C', desc:'Mountain valley · Check webcam before heading up', forecast:'https://www.meteoswiss.admin.ch/local-forecasts/grindelwald/3818.html', webcam:'https://www.jungfrau.ch/en-gb/grindelwald-first/webcam/' },
+    trains: [
+      { time:'9:00 AM', family:'shared', desc:'Wilderswil → Interlaken OST → Grindelwald', note:'BOB + WAB · ~50 min · Every 30 min', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Grindelwald&von=Wilderswil&datum=07.04.2026&zeit=09:00&abFahrt=true' },
+      { time:'2:00 PM', family:'shared', desc:'⚠ Check in — AlpinHotel Bort', note:'LAST gondola (winch) to hotel at 3:34 PM — do not miss!' },
+    ],
+    activities: [
+      { time:'9:00 AM', title:'Grindelwald First Cliff Walk', note:'Gondola up · Glass walkway on cliff · Stunning Eiger views', badge:'ticket', kids: true },
+      { time:'11:00 AM', title:'Grindelwald Town Walk + Lunch', note:'Village bakeries on main street are excellent', badge:'free' },
+      { time:'2:00 PM', title:'Check in — AlpinHotel Bort ⚠️', note:'Must take gondola by 3:34 PM — hotel is above the town!', badge:'book' },
+    ],
+    hotel: { name:'AlpinHotel Bort', addr:'Berghaus Bort, 3818 Grindelwald, Switzerland', maps:'https://maps.google.com/?q=AlpinHotel+Bort+Grindelwald', family:'shared' },
+    rainy: ['Jungfraubahn to Jungfraujoch — Top of Europe (above clouds!)', 'Grindelwald village museum', 'Ice Magic indoor rink', 'Sherlock Holmes Museum in Meiringen (~30 min by bus)'],
+  },
+  {
+    date: 'Tuesday, April 8', emoji: '🏔', short: 'Apr 8 🏔',
+    location: 'Grindelwald → Zermatt → Tasch',
+    split: false,
+    weather: { icon:'⛰', temp:'0–8°C', desc:'Matterhorn often clear in morning — go early!', forecast:'https://www.meteoswiss.admin.ch/local-forecasts/zermatt/3920.html', webcam:'https://www.zermatt.ch/en/webcam' },
+    trains: [
+      { time:'9:00 AM', family:'shared', desc:'Grindelwald → Interlaken OST → Brig → Zermatt', note:'~4h 30 min · Change at Visp or Brig · Scenic Rhône Valley', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Zermatt&von=Grindelwald&datum=08.04.2026&zeit=09:00&abFahrt=true' },
+      { time:'1:00 PM', family:'shared', desc:'Zermatt → Klein Matterhorn Cable Car', note:'Matterhorn Glacier Paradise · 3,883m · World\'s highest cable car', sbb:'https://www.matterhornparadise.ch/en/experience/tickets-prices' },
+      { time:'5:00 PM', family:'shared', desc:'Zermatt → Tasch (train, ~12 min)', note:'Cars not allowed in Zermatt — stay in Tasch', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=T%C3%A4sch&von=Zermatt&datum=08.04.2026&zeit=17:00&abFahrt=true' },
+    ],
+    activities: [
+      { time:'1:00 PM', title:'Klein Matterhorn Glacier Paradise', note:'Riffelberg · Rifelsee Lake — famous Matterhorn reflection photo!', badge:'ticket', kids: true },
+      { time:'1:00 PM', title:'Toblerone View Point', note:'The original inspiration for the Toblerone mountain logo', badge:'free', kids: true },
+      { time:'3:00 PM', title:'Zermatt Town Walk', note:'Car-free village · Electric taxis only · Great mountain atmosphere', badge:'free' },
+    ],
+    hotel: { name:'Hotel Mountime', addr:'Kantonsstrasse 185, Täsch, 3929, Switzerland', maps:'https://maps.google.com/?q=Hotel+Mountime+Kantonsstrasse+185+Täsch', family:'shared' },
+    rainy: ['Matterhorn Museum (Zermatlantis) — mountaineering history', 'Klein Matterhorn still worthwhile — above cloud line', 'Gornergrat railway — heated panorama cars', 'Zermatt village galleries and cheese shops'],
+  },
+  {
+    date: 'Wednesday, April 9', emoji: '🚢', short: 'Apr 9 🚢',
+    location: 'Tasch → Lucerne · Boat Ride',
+    split: false,
+    weather: { icon:'🌥', temp:'8–16°C', desc:'Lake Lucerne area · Warmer than the Alps', forecast:'https://www.meteoswiss.admin.ch/local-forecasts/lucerne/6000.html', webcam:'https://www.luzern.com/en/activities/lake-lucerne/webcam/' },
+    trains: [
+      { time:'9:00 AM', family:'shared', desc:'Tasch → Visp → Bern → Lucerne', note:'~4h total · Direct IC from Bern', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Luzern&von=T%C3%A4sch&datum=09.04.2026&zeit=09:00&abFahrt=true' },
+    ],
+    activities: [
+      { time:'Afternoon', title:'Chapel Bridge (Kapellbrücke)', note:'14th century wooden bridge · Most photographed in Switzerland', badge:'free', kids: true },
+      { time:'5:00 PM', title:'Lake Lucerne Evening Boat Ride', note:'SGV boat service · Mountain backdrop in evening light', badge:'ticket', kids: true },
+    ],
+    hotel: { name:'Holiday Inn Express Luzern – Kriens', addr:'Am Mattenhof 16, Kriens 6010, Switzerland', maps:'https://maps.google.com/?q=Holiday+Inn+Express+Luzern+Kriens+Am+Mattenhof+16', family:'shared' },
+    rainy: ['Swiss Museum of Transport — world-class, kids LOVE it', 'Lion Monument — moving outdoor sculpture, quick & free', 'Rosengart Collection — Picasso & Klee', 'Boat ride great in rain — enclosed cabin available'],
+  },
+  {
+    date: 'Thursday, April 10', emoji: '🏛', short: 'Apr 10 🏛',
+    location: 'Lucerne → Zurich · Museums · Pre-departure',
+    split: false,
+    weather: { icon:'🌤', temp:'10–17°C', desc:'City weather · Generally mild in April', forecast:'https://www.meteoswiss.admin.ch/local-forecasts/zurich/8001.html', webcam:null },
+    trains: [
+      { time:'9:00 AM', family:'shared', desc:'Lucerne → Zurich HB', note:'~1h · IC train · Every 30 min', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Z%C3%BCrich+HB&von=Luzern&datum=10.04.2026&zeit=09:00&abFahrt=true' },
+      { time:'8:00 PM', family:'ashok', desc:'Zurich HB → Geneva (airport hotel)', note:'IC train · ~3h · For 11 AM flight Apr 11', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Gen%C3%A8ve&von=Z%C3%BCrich+HB&datum=10.04.2026&zeit=20:00&abFahrt=true' },
+    ],
+    activities: [
+      { time:'10:00 AM', title:'Swiss National Museum', note:'Right next to Zurich HB · Swiss history & culture', badge:'ticket' },
+      { time:'11:00 AM', title:'Old Town Walk + Grossmünster Church', note:'Climb the tower for panoramic city views', badge:'free', kids: true },
+      { time:'12:00 PM', title:'Lunch — Niederdorf Quarter', note:'Lots of great options on Niederdorfstrasse', badge:'free' },
+      { time:'1:00 PM', title:'FIFA Museum', note:'Great for football fans · CHF 24 adults / CHF 14 kids', badge:'ticket', kids: true },
+      { time:'2:00 PM', title:'Lake Zurich Boat Ride', note:'ZSG boats · Short loop available', badge:'ticket', kids: true },
+      { time:'4:30 PM', title:'Lindt Home of Chocolate', note:'Kilchberg (~15 min S-Bahn) · Pre-book! Huge chocolate fountain', badge:'book', kids: true },
+    ],
+    hotel: { name:'Holiday Inn Express — Rümlang', addr:'Hofwiesenstrasse 30, 8153 Rümlang (near ZUR airport)', maps:'https://maps.google.com/?q=Holiday+Inn+Express+Rümlang+Hofwiesenstrasse+30', family:'rajesh' },
+    hotel2: { name:'Hotel near Geneva Airport', addr:'Geneva area — Ashok family pre-flight hotel', maps:'https://maps.google.com/?q=Geneva+Airport+GVA+Switzerland', family:'ashok' },
+    rainy: ['Kunsthaus Zurich — Switzerland\'s best art museum', 'Lindt Museum especially great on rainy days', 'Sprüngli café — legendary hot chocolate at Paradeplatz', 'Underground shopping at Zurich HB'],
+  },
+  {
+    date: 'Friday, April 11', emoji: '✈', short: 'Apr 11 ✈',
+    location: 'Departure → Atlanta',
+    split: true,
+    ashokNote: '11:00 AM UA749\nGVA → IAD → ATL\nArrives Atlanta Apr 11',
+    rajeshNote: '2:00 PM KLM\nZUR → AMS → ATL\nArrives Atlanta Apr 12',
+    weather: null,
+    trains: [
+      { time:'8:00 AM', family:'ashok', desc:'Geneva Hotel → GVA Airport', note:'Allow 2h before 11 AM flight · Check in by 9 AM', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Gen%C3%A8ve+A%C3%A9roport&von=Gen%C3%A8ve&datum=11.04.2026&zeit=08:00&abFahrt=true' },
+      { time:'11:00 AM', family:'rajesh', desc:'Rümlang → Zurich Airport (ZUR)', note:'Short taxi · 2 PM flight · Check in by 11:30 AM', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Z%C3%BCrich+Flughafen&von=R%C3%BCmlang&datum=11.04.2026&zeit=11:00&abFahrt=true' },
+    ],
+    activities: [
+      { time:'Night before', title:'Pack & weigh luggage — chocolate is heavy!', note:'Swiss duty-free limit: CHF 300 for VAT refund eligibility' },
+      { time:'Morning', title:'VAT Refund — get stamped before check-in', note:'For purchases over CHF 300 · Look for Tax Free sign' },
+      { time:'Airport', title:'Last Swiss chocolate at departures', note:'Sprungli / Lindt in both GVA and ZUR departures', kids: true },
+    ],
+    hotel: null,
+    rainy: null,
+  },
+];
+
+// ══════════════════════════════════
+// PERSONALIZATION TIPS PER DAY/INTEREST
+// ══════════════════════════════════
+function getPersonalTips(member, dayIndex) {
+  const interests = member.interests || [];
+  const isKid = member.role === 'kid';
+  const day = DAYS[dayIndex];
+  const tips = [];
+
+  if (isKid) {
+    const kidTips = {
+      2: ['🎬 Spot where James Bond skied at Piz Gloria!', '❄️ Bring gloves — it\'s snowy at the top even in April'],
+      3: ['🛷 Ask about the Trottibike scooters down from First!', '🦅 Look for Alpine choughs (black birds) near the cliff walk'],
+      4: ['🏔 Klein Matterhorn = world\'s highest cable car you\'ve ever been on!', '📸 The Matterhorn reflection in Rifelsee looks like a painting'],
+      5: ['🚢 You can steer the boat if you ask nicely!', '🦢 Look for swans on Lake Lucerne'],
+      6: ['🍫 The Lindt museum has the world\'s biggest chocolate fountain!', '⚽ FIFA museum has boots from Messi & Ronaldo'],
+    };
+    if (kidTips[dayIndex]) tips.push(...kidTips[dayIndex]);
+  }
+
+  if (interests.includes('photography')) {
+    const photoTips = {
+      2: ['📸 Golden hour at Schilthorn: 7–8 AM for soft light on peaks'],
+      4: ['📸 Rifelsee Lake: arrive early — reflection disappears when wind picks up', '📸 Matterhorn from Zermatt village: best from the cemetery trail'],
+      5: ['📸 Chapel Bridge from the riverside — use wide angle for the flowers'],
+      6: ['📸 Zurich old town from Lindenhügel hill — panoramic city shot'],
+    };
+    if (photoTips[dayIndex]) tips.push(...photoTips[dayIndex]);
+  }
+
+  if (interests.includes('food')) {
+    const foodTips = {
+      1: ['🍽 Try Rösti (Swiss hash brown) for breakfast in Wilderswil'],
+      3: ['🧀 Grindelwald has excellent fondue — book Restaurant Adler for dinner'],
+      4: ['🍫 Zermatt village: try Biner chocolate shop for Matterhorn-shaped pralines'],
+      5: ['🐟 Lake fish is excellent in Lucerne — try Restaurant Schiff by the water'],
+      6: ['🥨 Zürich has amazing bakeries in Niederdorf — grab a Gipfeli (croissant)'],
+    };
+    if (foodTips[dayIndex]) tips.push(...foodTips[dayIndex]);
+  }
+
+  if (interests.includes('hiking')) {
+    const hikingTips = {
+      3: ['🥾 Cliff Walk extension: continue to Bachalpsee lake (~2h round trip)', '🥾 Download Swisstopo app for offline trail maps'],
+      4: ['🥾 Gorner Gorge walk from Zermatt — dramatic ice-carved canyon (free)'],
+      5: ['🥾 Mt Pilatus hike starts from Lucerne if you have extra energy'],
+    };
+    if (hikingTips[dayIndex]) tips.push(...hikingTips[dayIndex]);
+  }
+
+  if (interests.includes('history') || interests.includes('museums')) {
+    const historyTips = {
+      2: ['🏛 007 Bond Museum is small but fascinating — free with cable car ticket'],
+      5: ['🏛 Old Town Lucerne: the city walls date back to 1386'],
+      6: ['🏛 Swiss National Museum: free entry with Swiss Travel Pass!'],
+    };
+    if (historyTips[dayIndex]) tips.push(...historyTips[dayIndex]);
+  }
+
+  return tips;
+}
+
+// ══════════════════════════════════
+// MEMBER SELECTION
+// ══════════════════════════════════
+async function loadMembers() {
+  try {
+    const res = await fetch('/api/members');
+    allMembers = await res.json();
+
+    if (allMembers.length === 0) {
+      document.getElementById('member-list').innerHTML = `
+        <div style="color:#aaa;text-align:center;font-size:0.85rem;padding:20px">
+          No family members set up yet.<br>Please share the family details so we can add them!
+        </div>`;
+      return;
+    }
+
+    const ashokMembers = allMembers.filter(m => m.family === 'ashok');
+    const rajeshMembers = allMembers.filter(m => m.family === 'rajesh');
+
+    let html = '';
+    if (ashokMembers.length) {
+      html += `<div class="family-group"><div class="family-group-label ashok">🔵 Ashok Family</div>`;
+      ashokMembers.forEach(m => { html += memberBtn(m); });
+      html += '</div>';
+    }
+    if (rajeshMembers.length) {
+      html += `<div class="family-group"><div class="family-group-label rajesh">🟢 Rajesh Family</div>`;
+      rajeshMembers.forEach(m => { html += memberBtn(m); });
+      html += '</div>';
+    }
+    document.getElementById('member-list').innerHTML = html;
+  } catch (e) {
+    document.getElementById('member-list').innerHTML = `<div style="color:#f87171;text-align:center">Could not load members. Is the server running?</div>`;
+  }
+}
+
+function memberBtn(m) {
+  const interestStr = m.interests && m.interests.length ? m.interests.slice(0,3).join(' · ') : 'Explorer';
+  return `<button class="member-btn" onclick="selectMember('${m._id}')">
+    <div class="member-avatar">${m.avatar || (m.role === 'kid' ? '👧' : '👤')}</div>
+    <div class="member-info">
+      <div class="member-name">${m.name}</div>
+      <div class="member-meta">${m.age} yrs · ${m.role === 'kid' ? 'Kid' : 'Adult'} · ${m.family.charAt(0).toUpperCase() + m.family.slice(1)} family</div>
+      <div class="member-interests">${interestStr}</div>
+    </div>
+  </button>`;
+}
+
+async function selectMember(id) {
+  currentMember = allMembers.find(m => m._id === id);
+  if (!currentMember) return;
+
+  // Set member color as CSS variable
+  const color = currentMember.color || (currentMember.family === 'ashok' ? '#2563EB' : '#059669');
+  document.documentElement.style.setProperty('--member-color', color);
+
+  // Restore last day from server
+  try {
+    const stateRes = await fetch(`/api/members/${id}/state`);
+    const state = await stateRes.json();
+    if (state && state.lastDayIndex !== undefined) currentDay = state.lastDayIndex;
+  } catch (_) {}
+
+  document.getElementById('who-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+
+  updateHeader();
+  renderDay(currentDay);
+  loadChecklist();
+  renderBookingTab();
+}
+
+function switchMember() {
+  currentMember = null;
+  document.getElementById('who-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+}
+
+function updateHeader() {
+  const m = currentMember;
+  const greetings = m.role === 'kid'
+    ? [`Hey ${m.name}! 🎉`, `Ready for adventure, ${m.name}?`]
+    : [`Hi ${m.name} 👋`, `Welcome, ${m.name}!`];
+  document.getElementById('header-greeting').textContent = greetings[0];
+  document.getElementById('header-sub').textContent = `${m.family.charAt(0).toUpperCase()+m.family.slice(1)} family · Apr 4–12 · Switzerland`;
+}
+
+// ══════════════════════════════════
+// DAY / TAB NAVIGATION
+// ══════════════════════════════════
+function showDay(i) {
+  currentDay = i;
+  document.querySelectorAll('.day-btn').forEach((b, j) => b.classList.toggle('active', i === j));
+  document.querySelectorAll('.day-btn')[i].scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
+  renderDay(i);
+  if (currentTab === 'notes') loadNotes(i);
+
+  // Persist to server
+  if (currentMember) {
+    fetch(`/api/members/${currentMember._id}/state`, { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ lastDayIndex: i }) });
+  }
+}
+
+function showTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`[onclick="showTab('${tab}')"]`).classList.add('active');
+  document.getElementById(`tab-${tab}`).classList.add('active');
+  if (tab === 'checklist') loadChecklist();
+  if (tab === 'notes') loadNotes(currentDay);
+}
+
+// ══════════════════════════════════
+// DAY RENDER
+// ══════════════════════════════════
+function renderDay(i) {
+  const day = DAYS[i];
+  const m = currentMember;
+  const isMyFamily = (f) => f === 'shared' || f === m.family;
+  const tips = getPersonalTips(m, i);
+  let html = '';
+
+  // Heading
+  html += `<div class="day-heading"><h2>${day.date}</h2><span class="location-tag">${day.location}</span></div>`;
+
+  // Personalized tips banner
+  if (tips.length > 0) {
+    html += `<div class="personal-banner">
+      <div class="pb-label">✨ Just for you, ${m.name}</div>
+      <div class="pb-tips">`;
+    tips.forEach(t => { html += `<div class="pb-tip">${t}</div>`; });
+    html += `</div></div>`;
+  }
+
+  // Split banner (travel days)
+  if (day.split) {
+    html += `<div class="split-banner">
+      <div class="split-card ashok"><div class="family-label">🔵 Ashok Family</div><p>${day.ashokNote.replace(/\n/g,'<br>')}</p></div>
+      <div class="split-card rajesh"><div class="family-label">🟢 Rajesh Family</div><p>${day.rajeshNote.replace(/\n/g,'<br>')}</p></div>
+    </div>`;
+  }
+
+  // Weather
+  if (day.weather) {
+    html += `<div class="section weather">
+      <div class="section-label">🌤 Weather</div>
+      <div class="weather-row">
+        <div class="weather-icon">${day.weather.icon}</div>
+        <div><div class="weather-temp">${day.weather.temp}</div><div class="weather-desc">${day.weather.desc}</div></div>
+      </div>
+      <a href="${day.weather.forecast}" class="ext-link weather-lnk" target="_blank">📡 MeteoSwiss Live Forecast</a>`;
+    if (day.weather.webcam) html += `<a href="${day.weather.webcam}" class="ext-link weather-lnk" target="_blank" style="margin-top:6px">📷 Live Webcam</a>`;
+    html += `</div>`;
+  }
+
+  // Trains (filtered to member's family or shared)
+  const myTrains = day.trains ? day.trains.filter(t => isMyFamily(t.family)) : [];
+  if (myTrains.length) {
+    html += `<div class="section trains"><div class="section-label">🚂 Trains & Transfers</div>`;
+    myTrains.forEach(t => {
+      const pill = t.family === 'shared' ? `<span class="family-pill pill-shared">Both</span>` :
+        t.family === 'ashok' ? `<span class="family-pill pill-ashok">Ashok</span>` :
+        `<span class="family-pill pill-rajesh">Rajesh</span>`;
+      html += `<div class="train-item">
+        <div class="train-time">${t.time}</div>
+        <div class="train-route">${pill}<div class="train-desc">${t.desc}</div><div class="train-note">${t.note||''}</div></div>
+        ${t.sbb ? `<a href="${t.sbb}" class="sbb-btn" target="_blank">SBB ↗</a>` : ''}
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Activities
+  if (day.activities && day.activities.length) {
+    html += `<div class="section activities"><div class="section-label">📍 Activities</div>`;
+    day.activities.forEach(a => {
+      const badge = a.badge === 'free' ? `<span class="act-badge badge-free">FREE</span>` :
+        a.badge === 'book' ? `<span class="act-badge badge-book">BOOK AHEAD</span>` :
+        a.badge === 'ticket' ? `<span class="act-badge badge-ticket">TICKET</span>` : '';
+      const kidBadge = a.kids ? `<span class="act-badge badge-kids">👧 kids</span>` : '';
+      html += `<div class="activity-item">
+        <div class="act-time">${a.time}</div>
+        <div class="act-body">
+          <div class="act-title">${a.title}${badge}${kidBadge}</div>
+          ${a.note ? `<div class="act-note">${a.note}</div>` : ''}
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Hotel
+  const hotelsToShow = [];
+  if (day.hotel) hotelsToShow.push(day.hotel);
+  if (day.hotel2) hotelsToShow.push(day.hotel2);
+  hotelsToShow.filter(h => isMyFamily(h.family) || h.family === 'shared').forEach(h => {
+    html += `<div class="section hotel">
+      <div class="section-label">🏨 Tonight's Stay</div>
+      <div class="hotel-name">${h.name}</div>
+      <div class="hotel-addr">${h.addr}</div>
+      <a href="${h.maps}" class="ext-link maps-lnk" target="_blank">📍 Open in Google Maps</a>
+    </div>`;
+  });
+
+  // Rainy day
+  if (day.rainy) {
+    html += `<div class="section rainy"><div class="section-label">☂ If it rains…</div><ul>`;
+    day.rainy.forEach(r => { html += `<li>${r}</li>`; });
+    html += `</ul></div>`;
+  }
+
+  document.getElementById('day-content').innerHTML = html;
+}
+
+// ══════════════════════════════════
+// CHECKLIST
+// ══════════════════════════════════
+async function loadChecklist() {
+  try {
+    const res = await fetch('/api/checklist');
+    checklistData = await res.json();
+    renderChecklist();
+  } catch (e) {
+    document.getElementById('checklist-content').innerHTML = `<div class="loading">Could not load checklist</div>`;
+  }
+}
+
+function filterChecklist(f) {
+  checklistFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[onclick="filterChecklist('${f}')"]`).classList.add('active');
+  renderChecklist();
+}
+
+function renderChecklist() {
+  const filtered = checklistFilter === 'all' ? checklistData : checklistData.filter(i => i.category === checklistFilter);
+
+  // Group by category
+  const groups = {};
+  filtered.forEach(item => {
+    const g = item.category;
+    if (!groups[g]) groups[g] = [];
+    groups[g].push(item);
+  });
+
+  const labels = { 'before-travel':'📋 Before You Travel', 'packing':'🧳 Packing', 'booking':'🎫 Bookings Needed', 'day-activity':'📅 Day-of Activities', 'note':'⭐ Areas to Explore / Notes' };
+  let html = '';
+
+  Object.keys(labels).forEach(cat => {
+    if (!groups[cat] || !groups[cat].length) return;
+    html += `<div class="checklist-group"><div class="cg-label">${labels[cat]}</div>`;
+    groups[cat].forEach(item => {
+      const myCompletion = item.completions && currentMember
+        ? item.completions.find(c => c.memberId === currentMember._id)
+        : null;
+      const isDone = !!myCompletion;
+      const otherCheckers = item.completions ? item.completions.filter(c => c.memberId !== currentMember?._id).map(c => c.memberName) : [];
+
+      html += `<div class="checklist-item ${isDone ? 'done' : ''}" id="ci-${item._id}">
+        <div class="ci-check ${isDone ? 'checked' : ''}" onclick="toggleCheck('${item._id}')"></div>
+        <div class="ci-body">
+          <div class="ci-text">${item.text}</div>
+          ${item.addedBy ? `<div class="ci-meta">Added by ${item.addedBy}</div>` : ''}
+          ${otherCheckers.length ? `<div class="ci-checkers">✓ Also done by: ${otherCheckers.join(', ')}</div>` : ''}
+          ${item.isBookingRequired && item.bookingUrl ? `<a href="${item.bookingUrl}" class="ci-book" target="_blank">🔗 Book now ↗</a>` : ''}
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+
+  if (!html) html = `<div class="loading" style="padding:20px">No items in this category yet</div>`;
+  document.getElementById('checklist-content').innerHTML = html;
+}
+
+async function toggleCheck(itemId) {
+  if (!currentMember) return;
+  try {
+    const res = await fetch(`/api/checklist/${itemId}/complete`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ memberId: currentMember._id, memberName: currentMember.name, family: currentMember.family })
+    });
+    const updated = await res.json();
+    const idx = checklistData.findIndex(i => i._id === itemId);
+    if (idx >= 0) checklistData[idx] = updated;
+    renderChecklist();
+  } catch (e) { showToast('Could not save — check connection'); }
+}
+
+async function addChecklistItem() {
+  const text = document.getElementById('new-item-text').value.trim();
+  const category = document.getElementById('new-item-category').value;
+  if (!text) return;
+
+  try {
+    const res = await fetch('/api/checklist', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text, category,
+        addedBy: currentMember.name,
+        addedByFamily: currentMember.family,
+        relevantFamilies: ['ashok', 'rajesh'],
+      })
+    });
+    const newItem = await res.json();
+    checklistData.push(newItem);
+    document.getElementById('new-item-text').value = '';
+    renderChecklist();
+    showToast('Added to shared checklist ✓');
+  } catch (e) { showToast('Could not add item'); }
+}
+
+// ══════════════════════════════════
+// NOTES
+// ══════════════════════════════════
+async function loadNotes(dayIndex) {
+  document.getElementById('notes-day-label').textContent = DAYS[dayIndex].date;
+  try {
+    const res = await fetch(`/api/notes?dayIndex=${dayIndex}`);
+    notesData = await res.json();
+    renderNotes();
+  } catch (e) {
+    document.getElementById('notes-content').innerHTML = `<div class="loading">Could not load notes</div>`;
+  }
+}
+
+function renderNotes() {
+  if (!notesData.length) {
+    document.getElementById('notes-content').innerHTML = `<div class="loading" style="padding:16px;color:var(--muted)">No notes yet — add the first one! 📝</div>`;
+    return;
+  }
+  let html = '';
+  notesData.forEach(note => {
+    const canDelete = currentMember && note.memberId === currentMember._id;
+    html += `<div class="note-card ${note.pinned ? 'pinned' : ''}" id="note-${note._id}">
+      <div class="note-header">
+        <div class="note-author">${note.addedBy} · ${note.addedByFamily} family · ${new Date(note.createdAt).toLocaleDateString()}</div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span class="note-pin" onclick="pinNote('${note._id}', ${!note.pinned})" title="${note.pinned ? 'Unpin' : 'Pin'}">${note.pinned ? '📌' : '📍'}</span>
+          ${canDelete ? `<span class="note-delete" onclick="deleteNote('${note._id}')">✕</span>` : ''}
+        </div>
+      </div>
+      <div class="note-text">${note.text}</div>
+      <span class="note-type ${note.type}">${note.type}</span>
+    </div>`;
+  });
+  document.getElementById('notes-content').innerHTML = html;
+}
+
+async function addNote() {
+  const text = document.getElementById('new-note-text').value.trim();
+  const type = document.getElementById('new-note-type').value;
+  if (!text || !currentMember) return;
+  try {
+    const res = await fetch('/api/notes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, type, dayIndex: currentDay, addedBy: currentMember.name, addedByFamily: currentMember.family, memberId: currentMember._id })
+    });
+    const note = await res.json();
+    notesData.unshift(note);
+    document.getElementById('new-note-text').value = '';
+    renderNotes();
+    showToast('Note added ✓');
+  } catch (e) { showToast('Could not add note'); }
+}
+
+async function pinNote(id, pinned) {
+  try {
+    const res = await fetch(`/api/notes/${id}`, { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ pinned }) });
+    const updated = await res.json();
+    const idx = notesData.findIndex(n => n._id === id);
+    if (idx >= 0) { notesData[idx] = updated; notesData.sort((a,b) => b.pinned - a.pinned); }
+    renderNotes();
+  } catch (e) { showToast('Could not pin note'); }
+}
+
+async function deleteNote(id) {
+  try {
+    await fetch(`/api/notes/${id}`, { method:'DELETE' });
+    notesData = notesData.filter(n => n._id !== id);
+    renderNotes();
+  } catch (e) { showToast('Could not delete'); }
+}
+
+// ══════════════════════════════════
+// BOOKING TAB
+// ══════════════════════════════════
+const BOOKINGS = [
+  { title:'Swiss Travel Pass', sub:'swisstravelsystem.com — activate on arrival', url:'https://www.swisstravelsystem.com/en/swiss-travel-pass/', needed:true },
+  { title:'GoldenPass Express Reservation', sub:'Geneva → Montreux → Interlaken · Apr 5 · Ashok family', url:'https://www.goldenpass.ch/en/goldenpass-express/reservation', needed:true, family:'ashok' },
+  { title:'Schilthorn — Thrill Walk + Piz Gloria', sub:'Apr 6 · Both families', url:'https://www.schilthorn.ch/en/planning/tickets/online-tickets', needed:true },
+  { title:'Grindelwald First — Cliff Walk Gondola', sub:'Apr 7 · Both families', url:'https://www.jungfrau.ch/en-gb/grindelwald-first/tickets/', needed:true },
+  { title:'Klein Matterhorn — Glacier Paradise', sub:'Apr 8 · Both families', url:'https://www.matterhornparadise.ch/en/experience/tickets-prices', needed:true },
+  { title:'Lindt Home of Chocolate', sub:'Apr 10 · Zürich · Pre-book strongly recommended', url:'https://www.lindt-home-of-chocolate.com/en/tickets/', needed:true },
+  { title:'FIFA Museum Tickets', sub:'Apr 10 · Zürich · Online discount vs door', url:'https://www.fifa.com/fifamuseum/tickets', needed:false },
+  { title:'SGV Lake Lucerne Boat', sub:'Apr 9 · Evening cruise', url:'https://www.lakelucerne.ch/en/services/timetable-and-tickets/', needed:false },
+  { title:'SBB Mobile App', sub:'Live timetables, tickets, platform info', url:'https://www.sbb.ch/en/travel-information/apps/sbb-mobile.html', needed:false },
+  { title:'MeteoSwiss App', sub:'Official Swiss weather — mountain forecasts', url:'https://www.meteoswiss.admin.ch/home/measurement-and-forecasting-systems/warning-and-information-products/meteoswiss-app.html', needed:false },
+];
+
+function renderBookingTab() {
+  const m = currentMember;
+  let html = `<div style="font-size:0.7rem;color:var(--muted);margin-bottom:10px">Tap any item to open booking page. <span style="color:var(--red);font-weight:600">Red</span> = still needed.</div>`;
+  BOOKINGS.forEach(b => {
+    if (b.family && b.family !== m.family) return; // skip other family's specific bookings
+    html += `<a href="${b.url}" class="booking-card" target="_blank">
+      <div class="bc-left">
+        <div class="bc-title">${b.title}</div>
+        <div class="bc-sub">${b.sub}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span class="bc-badge ${b.needed ? 'needed' : 'done'}">${b.needed ? 'Book!' : 'Optional'}</span>
+        <span class="bc-arrow">→</span>
+      </div>
+    </a>`;
+  });
+  document.getElementById('booking-content').innerHTML = html;
+}
+
+// ══════════════════════════════════
+// TOAST
+// ══════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ══════════════════════════════════
+// INIT
+// ══════════════════════════════════
+loadMembers();
+
+// Auto-jump to today's day if within trip
+const tripStart = new Date('2026-04-04');
+const today = new Date();
+const diff = Math.floor((today - tripStart) / 86400000);
+if (diff >= 0 && diff <= 7) currentDay = diff;
+</script>
+</body>
+</html>
