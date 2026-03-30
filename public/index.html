@@ -568,7 +568,7 @@ const DAYS = [
     split: true,
     ashokNote: '9:55 AM arrive GVA\nGoldenPass Express\nGVA → Montreux → Interlaken\n~12:30 PM train',
     rajeshNote: 'Morning rest in ZUR\nIC train afternoon\nZUR → Bern → Interlaken\n~5:00 PM',
-    weather: { icon:'⛅', temp:'8–14°C', desc:'Partly cloudy · April average', forecast:'https://www.meteoswiss.admin.ch/local-forecasts/interlaken/3800.html#forecast-tab=day', webcam:null },
+    weather: { icon:'⛅', temp:'8–14°C', desc:'Partly cloudy · April average', forecast:'https://www.meteoswiss.admin.ch/local-forecasts/interlaken/3800.html', webcam:null },
     trains: [
       { time:'12:30 PM', family:'ashok', desc:'GoldenPass Express — Geneva → Montreux → Interlaken OST', note:'~3h · Panoramic windows · Reservation recommended', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Interlaken+Ost&von=Gen%C3%A8ve&via=Montreux&datum=05.04.2026&zeit=12:30&abFahrt=true' },
       { time:'5:00 PM', family:'rajesh', desc:'IC — Zurich HB → Bern → Interlaken OST', note:'~2h · Direct IC · Every 30 min', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Interlaken+Ost&von=Z%C3%BCrich+HB&datum=05.04.2026&zeit=17:00&abFahrt=true' },
@@ -585,7 +585,7 @@ const DAYS = [
     date: 'Sunday, April 6', emoji: '⛰', short: 'Apr 6 ⛰',
     location: 'Birg · Schilthorn · Lauterbrunnen · Interlaken',
     split: false,
-    weather: { icon:'🌨', temp:'−3 to 2°C (summit)', desc:'Summit conditions — warm layers essential!', forecast:'https://www.meteoswiss.admin.ch/local-forecasts/schilthorn/3800.html', webcam:'https://www.schilthorn.ch/en/mountain/weather-webcam/webcam' },
+    weather: { icon:'🌨', temp:'−3 to 2°C (summit)', desc:'Summit conditions — warm layers essential!', forecast:'https://www.meteoswiss.admin.ch/local-forecasts/schilthorn.html', webcam:'https://schilthorn.swiss/en/pizgloria/Livecam' },
     trains: [
       { time:'9:00 AM', family:'shared', desc:'Wilderswil → Interlaken OST → Lauterbrunnen', note:'BOB train · ~30 min total', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Lauterbrunnen&von=Wilderswil&datum=06.04.2026&zeit=09:00&abFahrt=true' },
       { time:'9:45 AM', family:'shared', desc:'Lauterbrunnen → Grütschalp → Mürren → Schilthorn', note:'Cable car + mountain railway · ~1h total', sbb:'https://www.schilthorn.ch/en/planning/getting-here/from-lauterbrunnen' },
@@ -606,7 +606,7 @@ const DAYS = [
     date: 'Monday, April 7', emoji: '🧗', short: 'Apr 7 🧗',
     location: 'Grindelwald · First Cliff Walk',
     split: false,
-    weather: { icon:'🏔', temp:'2–10°C', desc:'Mountain valley · Check webcam before heading up', forecast:'https://www.meteoswiss.admin.ch/local-forecasts/grindelwald/3818.html', webcam:'https://www.jungfrau.ch/en-gb/grindelwald-first/webcam/' },
+    weather: { icon:'🏔', temp:'2–10°C', desc:'Mountain valley · Check webcam before heading up', forecast:'https://www.meteoswiss.admin.ch/local-forecasts/grindelwald/3818.html', webcam:'https://www.jungfrau.ch/en-gb/live/webcams/' },
     trains: [
       { time:'9:00 AM', family:'shared', desc:'Wilderswil → Interlaken OST → Grindelwald', note:'BOB + WAB · ~50 min · Every 30 min', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Grindelwald&von=Wilderswil&datum=07.04.2026&zeit=09:00&abFahrt=true' },
       { time:'2:00 PM', family:'shared', desc:'⚠ Check in — AlpinHotel Bort', note:'LAST gondola (winch) to hotel at 3:34 PM — do not miss!' },
@@ -623,7 +623,7 @@ const DAYS = [
     date: 'Tuesday, April 8', emoji: '🏔', short: 'Apr 8 🏔',
     location: 'Grindelwald → Zermatt → Tasch',
     split: false,
-    weather: { icon:'⛰', temp:'0–8°C', desc:'Matterhorn often clear in morning — go early!', forecast:'https://www.meteoswiss.admin.ch/local-forecasts/zermatt/3920.html', webcam:'https://www.zermatt.ch/en/webcam' },
+    weather: { icon:'⛰', temp:'0–8°C', desc:'Matterhorn often clear in morning — go early!', forecast:'https://www.meteoswiss.admin.ch/local-forecasts/zermatt/3920.html', webcam:'https://www.zermatt.ch/en/media/webcams', webcam2:'https://www.matterhornparadise.ch/en/mountain/webcam' },
     trains: [
       { time:'9:00 AM', family:'shared', desc:'Grindelwald → Interlaken OST → Brig → Zermatt', note:'~4h 30 min · Change at Visp or Brig · Scenic Rhône Valley', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Zermatt&von=Grindelwald&datum=08.04.2026&zeit=09:00&abFahrt=true' },
       { time:'1:00 PM', family:'shared', desc:'Zermatt → Klein Matterhorn Cable Car', note:'Matterhorn Glacier Paradise · 3,883m · World\'s highest cable car', sbb:'https://www.matterhornparadise.ch/en/experience/tickets-prices' },
@@ -641,7 +641,7 @@ const DAYS = [
     date: 'Wednesday, April 9', emoji: '🚢', short: 'Apr 9 🚢',
     location: 'Tasch → Lucerne · Boat Ride',
     split: false,
-    weather: { icon:'🌥', temp:'8–16°C', desc:'Lake Lucerne area · Warmer than the Alps', forecast:'https://www.meteoswiss.admin.ch/local-forecasts/lucerne/6000.html', webcam:'https://www.luzern.com/en/activities/lake-lucerne/webcam/' },
+    weather: { icon:'🌥', temp:'8–16°C', desc:'Lake Lucerne area · Warmer than the Alps', forecast:'https://www.meteoswiss.admin.ch/local-forecasts/lucerne/6003.html', webcam:'https://www.luzern.com/en/activities/webcams/' },
     trains: [
       { time:'9:00 AM', family:'shared', desc:'Tasch → Visp → Bern → Lucerne', note:'~4h total · Direct IC from Bern', sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Luzern&von=T%C3%A4sch&datum=09.04.2026&zeit=09:00&abFahrt=true' },
     ],
@@ -1019,6 +1019,7 @@ function renderDay(i) {
       </div>
       <a href="${day.weather.forecast}" class="ext-link weather-lnk" target="_blank">📡 MeteoSwiss Live Forecast</a>`;
     if (day.weather.webcam) html += `<a href="${day.weather.webcam}" class="ext-link weather-lnk" target="_blank" style="margin-top:6px">📷 Live Webcam</a>`;
+    if (day.weather.webcam2) html += `<a href="${day.weather.webcam2}" class="ext-link weather-lnk" target="_blank" style="margin-top:6px">📷 Klein Matterhorn Webcam</a>`;
     html += `</div>`;
   }
 
