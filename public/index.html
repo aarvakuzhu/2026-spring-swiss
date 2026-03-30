@@ -1457,12 +1457,11 @@ async function doSearch() {
   const q = document.getElementById('searchInput')?.value?.trim();
   if (!q) return;
 
-  // Save to history
   searchHistory = [q, ...searchHistory.filter(x=>x!==q)].slice(0,8);
   try { localStorage.setItem('swissSearch', JSON.stringify(searchHistory)); } catch(e){}
 
   document.getElementById('searchResults').innerHTML =
-    '<div class="search-loading"><div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div><span class="search-loading-text">Searching…</span></div>';
+    '<div class="search-loading"><div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div><span class="search-loading-text">Finding options near ' + DAYS[currentDay].location.split('·')[0].trim() + '…</span></div>';
 
   try {
     const r = await fetch('/api/search', {
@@ -1471,20 +1470,30 @@ async function doSearch() {
       body: JSON.stringify({ query: q, dayIndex: currentDay })
     });
     const data = await r.json();
-    const raw = data.reply || (data.error ? '⚠️ ' + (data.detail||data.error) : 'No results — try rephrasing');
+    const raw = data.reply || 'No results found — try rephrasing';
 
-    // Basic markdown-style rendering
-      const html = raw
-        .replace(/[*][*](.+?)[*][*]/g, '<strong>$1</strong>')
-        .replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '<a href="$2" target="_blank" style="color:var(--mc);font-weight:600">$1 ↗</a>')
-        .replace(/\n---\n/g, '<hr style="margin:10px 0;border:none;border-top:1px solid var(--line)">')
-        .replace(/\n/g, '<br>');
+    // Render markdown bold + links
+    const html = raw
+      .replace(/[*][*](.+?)[*][*]/g, '<strong>$1</strong>')
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '<a href="$2" target="_blank" style="color:var(--mc);font-weight:600;text-decoration:none">$1 ↗</a>')
+      .split('\\n---\\n').join('<hr style="margin:10px 0;border:none;border-top:1px solid var(--line)">')
+      .replace(/\n/g, '<br>')
 
-    document.getElementById('searchResults').innerHTML =
-      '<div class="search-result">' + html + '</div>' +
-      '<div style="text-align:center;margin-top:10px">' +
-        '<button class="search-chip" onclick="document.getElementById(\'searchInput\').focus()" style="background:var(--card)">🔍 New search</button>' +
-      '</div>';
+
+    let resultHtml = '<div class="search-result">' + html + '</div>';
+
+    // Render deep link buttons
+    if (data.links && data.links.length) {
+      resultHtml += '<div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px;padding:0 2px">';
+      data.links.forEach(l => {
+        resultHtml += '<a href="' + l.url + '" target="_blank" class="search-chip" style="background:var(--card);text-decoration:none">' + l.label + ' ↗</a>';
+      });
+      resultHtml += '</div>';
+    }
+
+    resultHtml += '<div style="text-align:center;margin-top:10px"><button class="search-chip" onclick="clearSearch()" style="background:var(--card)">← New search</button></div>';
+
+    document.getElementById('searchResults').innerHTML = resultHtml;
   } catch(e) {
     document.getElementById('searchResults').innerHTML = '<div class="search-result">⚠️ Search unavailable — check connection</div>';
   }
