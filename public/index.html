@@ -577,28 +577,28 @@ function getPersonalTips(member, dayIndex) {
   const nameTips = {
     'Ashok': {
       0: ['📋 You planned this — now enjoy it! Trip logistics are locked in ✓'],
-      1: ['🚂 GoldenPass Express is one of the world's most scenic train rides — grab a window seat'],
+      1: [`🚂 GoldenPass Express is one of the world's most scenic train rides — grab a window seat`],
       2: ['🎯 First tram at 8 AM gets you Schilthorn before the crowds'],
-      4: ['📍 Budget 30 min for Gorner Gorge — it's free and dramatic'],
+      4: [`📍 Budget 30 min for Gorner Gorge — it's free and dramatic`],
     },
     'KP': {
       1: ['🌸 Interlaken Höhematte park — wildflowers in April, beautiful to photograph'],
-      2: ['📸 Mürren village en route to Schilthorn is incredibly photogenic — don't rush through'],
+      2: [`📸 Mürren village en route to Schilthorn is incredibly photogenic — don't rush through`],
       4: ['💐 Zermatt has beautiful alpine gardens near the cemetery trail'],
       5: ['🛍 Lucerne old town has lovely Swiss craft shops along the river'],
       6: ['🏙 Zurich Bahnhofstrasse — window shopping at its most elegant'],
     },
     'Abhi': {
-      0: ['🌟 Switzerland has actual James Bond villain lairs — you'll see one on Day 3!'],
-      2: ['🕵️ At Piz Gloria: find the exact spot where Bond skied off the edge. It's real.'],
+      0: [`🌟 Switzerland has actual James Bond villain lairs — you'll see one on Day 3!`],
+      2: [`🕵️ At Piz Gloria: find the exact spot where Bond skied off the edge. It's real.`],
       3: ['🛷 Trottibike scooters at Grindelwald First — fastest way down a mountain legally'],
-      4: ['⛷ Klein Matterhorn has a snow park — ask Dad if there's time to play'],
+      4: [`⛷ Klein Matterhorn has a snow park — ask Dad if there's time to play`],
       5: ['⚽ Ask at the FIFA museum if you can try the penalty shootout simulator'],
       6: ['🍫 Lindt museum: unlimited chocolate tasting at the fountain. No, really.'],
     },
     'Adhar': {
       0: ['🚂 Swiss trains have double-decker cars — always go upstairs for the best views'],
-      2: ['❄️ There's real snow at Schilthorn — first snowball fight of the trip!'],
+      2: [`❄️ There's real snow at Schilthorn — first snowball fight of the trip!`],
       3: ['🦅 Spot eagles and Alpine choughs (black mountain birds) from the Cliff Walk'],
       4: ['🏔 The cable car to Klein Matterhorn goes so high your ears pop — coolest feeling'],
       5: ['🦢 Count how many swans you can spot on Lake Lucerne from the boat'],
@@ -606,8 +606,8 @@ function getPersonalTips(member, dayIndex) {
     },
     'Rajesh': {
       1: ['🗺 Interlaken tourist office has free trail maps — worth picking up on arrival'],
-      3: ['🥾 Grindelwald First to Bachalpsee is a genuine hiker's trail if you have energy'],
-      4: ['📜 Zermatt's Mountaineers' Cemetery has headstones of famous climbers — sobering & worth 10 min'],
+      3: [`🥾 Grindelwald First to Bachalpsee is a genuine hiker's trail if you have energy`],
+      4: [`📜 Zermatt's Mountaineers' Cemetery has headstones of famous climbers — sobering & worth 10 min`],
       6: ['🏛 Swiss National Museum is free with Travel Pass — genuinely world-class exhibits'],
     },
     'Anitha': {
@@ -624,7 +624,7 @@ function getPersonalTips(member, dayIndex) {
       6: ['🎨 Kunsthaus Zürich has one of the best Impressionist collections in Europe'],
     },
     'Rashmitha': {
-      1: ['🌸 Swiss wildflowers in April: edelweiss, gentians, alpine roses — nature's origami'],
+      1: [`🌸 Swiss wildflowers in April: edelweiss, gentians, alpine roses — nature's origami`],
       2: ['❄️ Catch snowflakes at Schilthorn summit — each one really is a unique pattern!'],
       3: ['🦋 Grindelwald meadows in spring have incredible wildflower patterns — explore slowly'],
       5: ['🦢 Lucerne swans are so tame they eat from your hand near the Chapel Bridge'],
@@ -687,8 +687,8 @@ function getPersonalTips(member, dayIndex) {
   if (interests.includes('history') || interests.includes('museums')) {
     const historyTips = {
       2: ['🏛 007 Bond Museum at Piz Gloria — free with cable car, surprisingly detailed'],
-      4: ['⛏ Zermatt Mountaineers' Cemetery — headstones tell incredible stories of the Alps'],
-      5: ['🏰 Lucerne's medieval walls and towers date to 1386 — walk the ramparts'],
+      4: [`⛏ Zermatt Mountaineers' Cemetery — headstones tell incredible stories of the Alps`],
+      5: [`🏰 Lucerne's medieval walls and towers date to 1386 — walk the ramparts`],
       6: ['🏛 Swiss National Museum: free with Travel Pass, genuinely world-class'],
     };
     if (historyTips[dayIndex]) tips.push(...historyTips[dayIndex]);
@@ -696,10 +696,10 @@ function getPersonalTips(member, dayIndex) {
 
   if (interests.includes('sports') || interests.includes('games') || interests.includes('fun')) {
     const funTips = {
-      2: ['🎿 Schilthorn has a mini snow park area — ask the lifties what's open'],
+      2: [`🎿 Schilthorn has a mini snow park area — ask the lifties what's open`],
       3: ['🛷 Trottibike downhill scooter from First — one of the most fun things in the Alps'],
       4: ['⛷ Klein Matterhorn glacier has a snow park even in April'],
-      6: ['⚽ FIFA museum penalty shootout simulator — beat Rajesh's score'],
+      6: [`⚽ FIFA museum penalty shootout simulator — beat Rajesh's score`],
     };
     if (funTips[dayIndex]) tips.push(...funTips[dayIndex]);
   }
