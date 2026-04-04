@@ -386,6 +386,49 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 /* ── LOADING ── */
 .loader { text-align: center; padding: 40px 20px; color: var(--sub); font-size: 0.84rem; }
+
+/* ── TRANSPORT ── */
+.transport-card { background: var(--card); border-radius: var(--radius); margin-bottom: 10px; overflow: hidden; }
+.transport-tabs { display: flex; border-bottom: 1px solid var(--line); }
+.tt-btn { flex: 1; padding: 10px 8px; font-size: 0.72rem; font-weight: 600; color: var(--sub); border: none; background: none; font-family: inherit; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; }
+.tt-btn.active { color: var(--mc); border-bottom-color: var(--mc); }
+.tt-panel { display: none; padding: 12px 14px; }
+.tt-panel.active { display: block; }
+
+/* Planning mode */
+.route-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.route-from-to { flex: 1; }
+.route-cities { font-weight: 700; font-size: 0.9rem; }
+.route-date { font-size: 0.7rem; color: var(--sub); margin-top: 1px; }
+.mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.mode-card { background: var(--bg); border-radius: 10px; padding: 10px 12px; border: 1.5px solid var(--line); }
+.mode-card.pass-covered { border-color: #BBF7D0; background: #F0FDF4; }
+.mode-card.partial { border-color: #FEF3C7; background: #FFFBEB; }
+.mode-icon { font-size: 1.3rem; margin-bottom: 4px; }
+.mode-name { font-size: 0.78rem; font-weight: 700; }
+.mode-time { font-size: 0.72rem; color: var(--sub); margin-top: 1px; }
+.mode-pass { font-size: 0.62rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-top: 4px; display: inline-block; }
+.mode-pass.covered { background: #DCFCE7; color: #15803D; }
+.mode-pass.partial { background: #FEF3C7; color: #92400E; }
+.mode-pass.not-covered { background: #FEE2E2; color: #DC2626; }
+.pass-note { font-size: 0.72rem; color: #15803D; background: #F0FDF4; border-radius: 8px; padding: 8px 10px; margin-top: 4px; }
+
+/* Live mode */
+.live-journey-form { display: flex; flex-direction: column; gap: 8px; }
+.journey-field { display: flex; flex-direction: column; gap: 4px; }
+.journey-label { font-size: 0.65rem; font-weight: 700; color: var(--sub); text-transform: uppercase; letter-spacing: 0.06em; }
+.journey-input { padding: 10px 12px; background: var(--bg); border: 1.5px solid var(--line); border-radius: 10px; font-family: inherit; font-size: 0.84rem; color: var(--ink); }
+.journey-input:focus { outline: none; border-color: var(--mc); }
+.journey-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.journey-btn { width: 100%; padding: 11px; background: var(--mc); color: white; border-radius: 10px; font-weight: 700; font-size: 0.84rem; font-family: inherit; border: none; cursor: pointer; margin-top: 4px; }
+.quick-journeys { margin-top: 10px; }
+.qj-label { font-size: 0.68rem; font-weight: 700; color: var(--sub); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+.qj-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: var(--bg); border-radius: 10px; margin-bottom: 6px; cursor: pointer; }
+.qj-item:active { opacity: 0.7; }
+.qj-route { font-size: 0.82rem; font-weight: 600; }
+.qj-detail { font-size: 0.7rem; color: var(--sub); margin-top: 1px; }
+.qj-go { font-size: 0.72rem; color: var(--mc); font-weight: 700; }
+
 </style>
 </head>
 <body>
@@ -485,7 +528,7 @@ const DAYS = [
     rajeshNote:'10:00 PM · DL9375\nATL → AMS\nConnects DL9435\nAMS → ZUR (arrives Apr 5)',
     weather:null,
     trains:[
-      {time:'12:55 PM',family:'ashok',desc:'UA8392 — ATL → YUL',note:'Booking ref: LCQ7R4 · Last name: Ashokkumar',sbb:'https://www.united.com'},
+      {time:'12:55 PM',family:'ashok',desc:'UA8392 — ATL → YUL',note:'Check in online 24h before departure',sbb:'https://www.united.com'},
       {time:'8:20 PM', family:'ashok',desc:'UA8390 — YUL → GVA',note:'Arrives Geneva morning Apr 5',sbb:'https://www.united.com'},
       {time:'10:00 PM',family:'rajesh',desc:'DL9375 — ATL → AMS',note:'Connects to DL9435 AMS→ZUR · Arrives Zurich Apr 5',sbb:'https://www.delta.com'},
     ],
@@ -500,12 +543,12 @@ const DAYS = [
     date:'Saturday, Apr 5', short:'Apr 5', emoji:'🚂',
     location:'Arrivals → Interlaken → Wilderswil', split:true,
     ashokNote:'9:55 AM arrive GVA\nGoldenPass Express\nGVA → Montreux → Interlaken\n~12:30 PM',
-    rajeshNote:'Morning rest ZUR\nIC train afternoon\nZUR → Bern → Interlaken\n~5:00 PM',
+    rajeshNote:'DL9435 arrives ZUR\n~5:30–6:00 PM local\nIC train to Interlaken\nDepart ~7:00 PM',
     weather:{icon:'⛅',tempDay:'10–14°C',tempNight:'4–8°C',loc:'Interlaken',desc:'Partly cloudy · Light jacket needed',
       forecast:'https://www.meteoswiss.admin.ch/local-forecasts/interlaken/3800.html',webcam:null},
     trains:[
       {time:'12:30 PM',family:'ashok',desc:'GoldenPass Express — GVA → Montreux → Interlaken OST',note:'~3h · Scenic panoramic windows · Reservation needed',sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Interlaken+Ost&von=Gen%C3%A8ve&via=Montreux&datum=05.04.2026&zeit=12:30&abFahrt=true'},
-      {time:'5:00 PM', family:'rajesh',desc:'IC — Zurich HB → Bern → Interlaken OST',note:'~2h · Direct IC · Every 30 min',sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Interlaken+Ost&von=Z%C3%BCrich+HB&datum=05.04.2026&zeit=17:00&abFahrt=true'},
+      {time:'~7:00 PM', family:'rajesh',desc:'IC — Zurich HB → Bern → Interlaken OST',note:'~2h · After clearing customs & collecting bags from ZUR · Every 30 min',sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Interlaken+Ost&von=Z%C3%BCrich+HB&datum=05.04.2026&zeit=19:00&abFahrt=true'},
       {time:'8:00 PM', family:'shared',desc:'BOB — Interlaken OST → Wilderswil',note:'~6 min · Last train ~10:30 PM',sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Wilderswil&von=Interlaken+Ost&datum=05.04.2026&zeit=20:00&abFahrt=true'},
     ],
     activities:[
@@ -616,7 +659,7 @@ const DAYS = [
     weather:null,
     trains:[
       {time:'8:00 AM',family:'ashok',desc:'Hotel → Geneva Airport (GVA)',note:'Allow 2h+ before 11 AM flight · Check in by 9 AM',sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Gen%C3%A8ve+A%C3%A9roport&von=Gen%C3%A8ve&datum=11.04.2026&zeit=08:00&abFahrt=true'},
-      {time:'11:00 AM',family:'ashok',desc:'UA749 — GVA → IAD',note:'Booking ref: LCQ7R4 · Last name: Ashokkumar',sbb:'https://www.united.com'},
+      {time:'11:00 AM',family:'ashok',desc:'UA749 — GVA → IAD',note:'Check in online 24h before departure',sbb:'https://www.united.com'},
       {time:'10:08 AM',family:'ashok',desc:'UA1635 — IAD → ATL (EST)',note:'Connection at Washington Dulles',sbb:'https://www.united.com'},
       {time:'11:00 AM',family:'rajesh',desc:'Rümlang → Zurich Airport (ZUR)',note:'Short taxi · DL9244 departs 2 PM · Check in by 11:30 AM',sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Z%C3%BCrich+Flughafen&von=R%C3%BCmlang&datum=11.04.2026&zeit=11:00&abFahrt=true'},
       {time:'2:00 PM',family:'rajesh',desc:'DL9244 — ZUR → AMS',note:'Connects DL9358 AMS→JFK · DL2245 JFK→ATL',sbb:'https://www.delta.com'},
@@ -634,13 +677,13 @@ const AIRPORT_NAMES = { ATL:'Atlanta', GVA:'Geneva', ZUR:'Zurich', AMS:'Amsterda
 
 const TRIP_FLIGHTS = {
   0:[ // Apr 4 — sorted by departure time
-    {fn:'UA8392',family:'ashok', from:'ATL',to:'YUL',dep:'12:55 PM',arr:'4:20 PM',     airline:'United', booking:'LCQ7R4'},
-    {fn:'UA8390',family:'ashok', from:'YUL',to:'GVA',dep:'8:20 PM', arr:'9:55 AM+1',   airline:'United', booking:'LCQ7R4'},
+    {fn:'UA8392',family:'ashok', from:'ATL',to:'YUL',dep:'12:55 PM',arr:'4:20 PM',     airline:'United'},
+    {fn:'UA8390',family:'ashok', from:'YUL',to:'GVA',dep:'8:20 PM', arr:'9:55 AM+1',   airline:'United'},
     {fn:'DL9375',family:'rajesh',from:'ATL',to:'AMS',dep:'10:00 PM',arr:'1:30 PM+1',   airline:'Delta'},
     {fn:'DL9435',family:'rajesh',from:'AMS',to:'ZUR',dep:'Next day',arr:'~4:30 PM+1',  airline:'Delta (connection)'},
   ],
   7:[ // Apr 11 — sorted by departure time (local)
-    {fn:'UA749', family:'ashok', from:'GVA',to:'IAD',dep:'11:00 AM',arr:'~2:30 PM EST',airline:'United', booking:'LCQ7R4'},
+    {fn:'UA749', family:'ashok', from:'GVA',to:'IAD',dep:'11:00 AM',arr:'~2:30 PM EST',airline:'United'},
     {fn:'UA1635',family:'ashok', from:'IAD',to:'ATL',dep:'10:08 AM EST',arr:'~12:00 PM',airline:'United',booking:'LCQ7R4'},
     {fn:'DL9244',family:'rajesh',from:'ZUR',to:'AMS',dep:'2:00 PM', arr:'~3:45 PM',    airline:'Delta'},
     {fn:'DL9358',family:'rajesh',from:'AMS',to:'JFK',dep:'~5:30 PM',arr:'~8:00 PM EST',airline:'Delta'},
@@ -670,7 +713,7 @@ function getPersonalTips(member, dayIndex) {
 
   const nameTips = {
     'Ashok':{
-      0:[`📋 Booking ref LCQ7R4 (last name: Ashokkumar) — keep it handy for check-in`],
+      0:[`📋 Check in online 24h before departure — print/save boarding passes offline`],
       1:[`🚂 GoldenPass Express — panoramic windows, grab a seat on the right side for best views`],
       2:[`🎯 First tram at 9 AM gets you Schilthorn before the tour groups`],
       4:[`📍 Gorner Gorge walk from Zermatt — free, 45 min, dramatic ice-carved canyon`],
@@ -856,6 +899,214 @@ function renderCurrentTab() {
   else if (currentTab==='booking') renderBooking();
 }
 
+
+// ── TRANSPORT MODES DATA ──
+const TRANSPORT_MODES = {
+  1: { // Apr 5 — arrivals
+    ashok: [
+      {icon:'🚂',name:'GoldenPass Express',time:'~3h',pass:'covered',note:'Geneva → Montreux → Interlaken · Scenic panoramic route · Seat reservation ~CHF 10 extra'},
+      {icon:'🚌',name:'PostBus (Wilderswil)',time:'6 min',pass:'covered',note:'Interlaken Ost → Wilderswil · Runs every 30 min'},
+    ],
+    rajesh: [
+      {icon:'✈',name:'Fly + Train',time:'~1.5h',pass:'partial',note:'ZUR airport → Zurich HB by train (15 min) · then IC to Interlaken (~2h)'},
+      {icon:'🚂',name:'IC Train',time:'~2h',pass:'covered',note:'Zurich HB → Bern → Interlaken Ost · Every 30 min · Fast and direct'},
+    ],
+    shared: [
+      {icon:'🚂',name:'BOB Train',time:'6 min',pass:'covered',note:'Interlaken Ost → Wilderswil · Small mountain railway · Runs every 30 min till 10:30 PM'},
+    ]
+  },
+  2: { // Apr 6 — Schilthorn
+    shared: [
+      {icon:'🚂',name:'Train to Lauterbrunnen',time:'30 min',pass:'covered',note:'Wilderswil → Interlaken Ost → Lauterbrunnen · BOB railway · Scenic valley'},
+      {icon:'🚡',name:'Cable car to Schilthorn',time:'~1h',pass:'partial',note:'Lauterbrunnen → Grütschalp → Mürren → Birg → Piz Gloria · 50% discount with Swiss Pass'},
+      {icon:'🚌',name:'No bus needed',time:'—',pass:'covered',note:'Everything by train and cable car — no bus required on this day'},
+    ]
+  },
+  3: { // Apr 7 — Grindelwald
+    shared: [
+      {icon:'🚂',name:'Train via Interlaken',time:'50 min',pass:'covered',note:'Wilderswil → Interlaken Ost → Grindelwald · BOB + WAB railways · Every 30 min'},
+      {icon:'🚡',name:'Gondola to First',time:'25 min',pass:'partial',note:'Grindelwald Terminal → First · 50% discount with Swiss Pass · Book separately'},
+      {icon:'🚡',name:'AlpinHotel Gondola',time:'10 min',pass:'not-covered',note:'⚠ LAST ride UP at 3:34 PM · Separate hotel gondola (winch) — not on Swiss Pass'},
+    ]
+  },
+  4: { // Apr 8 — Zermatt
+    shared: [
+      {icon:'🚂',name:'IC Train',time:'4h 30 min',pass:'covered',note:'Grindelwald → Interlaken Ost → Brig → Zermatt · 1 change at Visp or Brig · Scenic Rhône Valley'},
+      {icon:'🚡',name:'Klein Matterhorn Cable',time:'30 min',pass:'partial',note:'Zermatt → Trockener Steg → Matterhorn Glacier Paradise · 50% discount with Swiss Pass'},
+      {icon:'🚂',name:'Train to Täsch',time:'12 min',pass:'covered',note:'Zermatt → Täsch · Runs every 20 min · Cars not allowed in Zermatt'},
+      {icon:'🚕',name:'Electric Taxi (in Zermatt)',time:'varies',pass:'not-covered',note:'Small electric taxis run within Zermatt village · CHF 8–15 per trip'},
+    ]
+  },
+  5: { // Apr 9 — Lucerne
+    shared: [
+      {icon:'🚂',name:'IC Train',time:'~4h',pass:'covered',note:'Täsch → Visp → Bern → Lucerne · 1–2 changes · Comfortable IC trains'},
+      {icon:'⛵',name:'Lake Lucerne Boat',time:'varies',pass:'covered',note:'SGV boats fully covered by Swiss Pass · Evening cruise recommended'},
+    ]
+  },
+  6: { // Apr 10 — Zurich
+    shared: [
+      {icon:'🚂',name:'IC Train to Zurich',time:'1h',pass:'covered',note:'Lucerne → Zurich HB · Direct IC · Every 30 min · Platform usually 1–4'},
+      {icon:'🚇',name:'Zurich Tram/Metro',time:'varies',pass:'covered',note:'All Zurich trams, buses, S-Bahn covered by Swiss Pass within city zones'},
+      {icon:'🚂',name:'S-Bahn to Lindt',time:'15 min',pass:'covered',note:'Zurich HB → Kilchberg (S8) for Lindt museum · Covered by Swiss Pass'},
+      {icon:'⛵',name:'Lake Zurich Boat',time:'varies',pass:'covered',note:'ZSG boats on Lake Zurich covered by Swiss Pass'},
+    ]
+  },
+  7: { // Apr 11 — departure
+    ashok: [
+      {icon:'🚂',name:'Train to Geneva Airport',time:'3h',pass:'covered',note:'Zurich HB → Geneva Aéroport · Direct night train · Book seat ahead'},
+    ],
+    rajesh: [
+      {icon:'🚕',name:'Taxi/Shuttle to ZUR',time:'5 min',pass:'not-covered',note:'Hotel Mountime Rümlang → Zurich Airport · Very short, taxi easiest'},
+      {icon:'🚂',name:'S-Bahn to ZUR',time:'8 min',pass:'covered',note:'Rümlang station → Zurich Airport · S-Bahn · 2 trains per hour'},
+    ]
+  }
+};
+
+// Build pre-filled SBB URL
+function buildSBBUrl(from, to, date, time) {
+  const base = 'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml';
+  const params = new URLSearchParams({ nach: to, von: from, reiseArt: 'BAHN', datum: date, zeit: time, abFahrt: 'true' });
+  return base + '?' + params.toString();
+}
+
+function buildTransportSection(trains, dayIndex, member) {
+  const modes = TRANSPORT_MODES[dayIndex];
+  const myFamily = member?.family;
+
+  // Collect modes relevant to this member
+  let allModes = [];
+  if (modes) {
+    if (modes.shared) allModes = [...allModes, ...modes.shared.map(m => ({...m, family:'shared'}))];
+    if (myFamily === 'ashok' && modes.ashok) allModes = [...allModes, ...modes.ashok.map(m => ({...m, family:'ashok'}))];
+    if (myFamily === 'rajesh' && modes.rajesh) allModes = [...allModes, ...modes.rajesh.map(m => ({...m, family:'rajesh'}))];
+  }
+
+  // Quick journeys from trains data
+  const quickJourneys = trains.map(t => ({
+    route: t.desc,
+    time: t.time,
+    detail: t.note || '',
+    sbb: t.sbb || ''
+  }));
+
+  // Get today's date string for SBB
+  const dayDates = ['04.04.2026','05.04.2026','06.04.2026','07.04.2026','08.04.2026','09.04.2026','10.04.2026','11.04.2026'];
+  const dateStr = dayDates[dayIndex] || '05.04.2026';
+
+  const passColors = {covered:'covered', partial:'partial', 'not-covered':'not-covered'};
+
+  let html = `<div class="sec-label">🚂 Getting Around</div>
+  <div class="transport-card">
+    <div class="transport-tabs">
+      <button class="tt-btn active" onclick="showTransportTab(${dayIndex},'plan')">📋 Plan options</button>
+      <button class="tt-btn" onclick="showTransportTab(${dayIndex},'live')">🔴 Live schedule</button>
+    </div>
+
+    <div class="tt-panel active" id="tt-plan-${dayIndex}">`;
+
+  // Swiss Pass coverage summary
+  html += `<div class="pass-note">🎫 Swiss Pass covers all trains, boats & trams. Cable cars usually 50% discount.</div>`;
+
+  // Mode grid
+  if (allModes.length) {
+    html += `<div style="margin-top:10px">`;
+    allModes.forEach(m => {
+      const passClass = m.pass === 'covered' ? 'covered' : m.pass === 'partial' ? 'partial' : 'not-covered';
+      const passLabel = m.pass === 'covered' ? '✓ Swiss Pass' : m.pass === 'partial' ? '50% discount' : 'Not covered';
+      html += `<div class="mode-card ${m.pass === 'covered' ? 'pass-covered' : m.pass === 'partial' ? 'partial' : ''}" style="margin-bottom:8px">
+        <div style="display:flex;align-items:flex-start;gap:10px">
+          <div class="mode-icon">${m.icon}</div>
+          <div style="flex:1">
+            <div class="mode-name">${m.name} <span style="font-weight:400;color:var(--sub);font-size:0.72rem">· ${m.time}</span></div>
+            <div class="mode-time">${m.note}</div>
+            <span class="mode-pass ${passClass}">${passLabel}</span>
+          </div>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  html += `</div>
+
+    <div class="tt-panel" id="tt-live-${dayIndex}">
+      <div class="live-journey-form">
+        <div class="journey-row">
+          <div class="journey-field">
+            <label class="journey-label">From</label>
+            <input class="journey-input" id="tt-from-${dayIndex}" value="${getDefaultFrom(dayIndex, myFamily)}" placeholder="e.g. Interlaken Ost">
+          </div>
+          <div class="journey-field">
+            <label class="journey-label">To</label>
+            <input class="journey-input" id="tt-to-${dayIndex}" value="${getDefaultTo(dayIndex, myFamily)}" placeholder="e.g. Grindelwald">
+          </div>
+        </div>
+        <div class="journey-row">
+          <div class="journey-field">
+            <label class="journey-label">Date</label>
+            <input class="journey-input" id="tt-date-${dayIndex}" value="${dateStr}" placeholder="dd.mm.yyyy">
+          </div>
+          <div class="journey-field">
+            <label class="journey-label">Time (now)</label>
+            <input class="journey-input" id="tt-time-${dayIndex}" value="${getNowTime()}" placeholder="HH:MM">
+          </div>
+        </div>
+        <button class="journey-btn" onclick="openSBB(${dayIndex})">🚂 Check live times on SBB</button>
+      </div>
+
+      ${quickJourneys.length ? `
+      <div class="quick-journeys">
+        <div class="qj-label">Today's planned journeys</div>
+        ${quickJourneys.map(j => `
+        <div class="qj-item" onclick="window.open('${j.sbb}','_blank')">
+          <div>
+            <div class="qj-route">${j.route.replace(' — ',' → ')}</div>
+            <div class="qj-detail">${j.time}${j.detail ? ' · '+j.detail : ''}</div>
+          </div>
+          <span class="qj-go">SBB ↗</span>
+        </div>`).join('')}
+      </div>` : ''}
+    </div>
+  </div>`;
+
+  return html;
+}
+
+function getDefaultFrom(dayIndex, family) {
+  const froms = {1: family==='ashok'?'Genève':'Zürich HB', 2:'Wilderswil', 3:'Wilderswil', 4:'Grindelwald', 5:'Täsch', 6:'Luzern', 7: family==='ashok'?'Genève':'Rümlang'};
+  return froms[dayIndex] || '';
+}
+
+function getDefaultTo(dayIndex, family) {
+  const tos = {1:'Interlaken Ost', 2:'Lauterbrunnen', 3:'Grindelwald', 4:'Zermatt', 5:'Luzern', 6:'Zürich HB', 7: family==='ashok'?'Genève Aéroport':'Zürich Flughafen'};
+  return tos[dayIndex] || '';
+}
+
+function getNowTime() {
+  const now = new Date();
+  return now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+}
+
+function showTransportTab(dayIndex, tab) {
+  ['plan','live'].forEach(t => {
+    const panel = document.getElementById('tt-'+t+'-'+dayIndex);
+    if (panel) panel.classList.toggle('active', t===tab);
+  });
+  const card = document.getElementById('tt-plan-'+dayIndex)?.closest('.transport-card');
+  if (card) {
+    card.querySelectorAll('.tt-btn').forEach((b,i) => b.classList.toggle('active', (i===0&&tab==='plan')||(i===1&&tab==='live')));
+  }
+}
+
+function openSBB(dayIndex) {
+  const from = document.getElementById('tt-from-'+dayIndex)?.value || '';
+  const to = document.getElementById('tt-to-'+dayIndex)?.value || '';
+  const date = document.getElementById('tt-date-'+dayIndex)?.value || '';
+  const time = document.getElementById('tt-time-'+dayIndex)?.value || '';
+  const url = buildSBBUrl(from, to, date, time);
+  window.open(url, '_blank');
+}
+
 // ── ITINERARY ──
 async function renderItinerary() {
   const d = DAYS[currentDay];
@@ -922,20 +1173,10 @@ async function renderItinerary() {
     '</div>';
   }
 
-  // Trains
+  // Transport section
   const myTrains = (d.trains||[]).filter(t=>isMyFam(t.family));
   if (myTrains.length) {
-    html += `<div class="sec-label">🚂 Trains & Transfers</div>
-    <div class="card">`;
-    myTrains.forEach(t => {
-      const badge = t.family==='shared'?`<span class="fp-badge fp-shared">Both</span>`:t.family==='ashok'?`<span class="fp-badge fp-ashok">Ashok</span>`:`<span class="fp-badge fp-rajesh">Rajesh</span>`;
-      html += `<div class="train-row">
-        <div class="tr-time">${t.time}</div>
-        <div class="tr-body">${badge}<div class="tr-route">${t.desc}</div><div class="tr-note">${t.note||''}</div></div>
-        ${t.sbb?`<a href="${t.sbb}" class="tr-sbb" target="_blank">↗</a>`:''}
-      </div>`;
-    });
-    html += `</div>`;
+    html += buildTransportSection(myTrains, currentDay, m);
   }
 
   // Activities
