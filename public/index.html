@@ -113,10 +113,16 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .weather-card { background: var(--mc); border-radius: var(--radius); padding: 14px; margin-bottom: 10px; color: white; }
 .wc-top { display: flex; justify-content: space-between; align-items: flex-start; }
 .wc-location { font-size: 0.72rem; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.05em; }
-.wc-temp { font-size: 2.2rem; font-weight: 700; line-height: 1; }
-.wc-desc { font-size: 0.78rem; opacity: 0.85; margin-top: 3px; }
+.wc-temps { display: flex; align-items: baseline; gap: 10px; margin: 3px 0; }
+.wc-temp-day { font-size: 2.2rem; font-weight: 700; line-height: 1; }
+.wc-temp-night { font-size: 0.9rem; opacity: 0.7; font-weight: 500; }
+.wc-temp-labels { display: flex; gap: 10px; margin-bottom: 4px; }
+.wc-temp-label { font-size: 0.6rem; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+.wc-desc { font-size: 0.78rem; opacity: 0.85; margin-top: 2px; }
+.wc-clothing { display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap; }
+.wc-clothing-tag { background: rgba(255,255,255,0.18); border-radius: 6px; padding: 4px 9px; font-size: 0.7rem; font-weight: 600; }
 .wc-icon { font-size: 2.8rem; }
-.wc-links { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.wc-links { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
 .wc-link { background: rgba(255,255,255,0.2); border-radius: 8px; padding: 6px 12px; font-size: 0.72rem; font-weight: 600; color: white; }
 
 /* ── TRAIN ROWS ── */
@@ -495,7 +501,7 @@ const DAYS = [
     location:'Arrivals → Interlaken → Wilderswil', split:true,
     ashokNote:'9:55 AM arrive GVA\nGoldenPass Express\nGVA → Montreux → Interlaken\n~12:30 PM',
     rajeshNote:'Morning rest ZUR\nIC train afternoon\nZUR → Bern → Interlaken\n~5:00 PM',
-    weather:{icon:'⛅',temp:'8–14°C',loc:'Interlaken',desc:'Partly cloudy · April average',
+    weather:{icon:'⛅',tempDay:'10–14°C',tempNight:'4–8°C',loc:'Interlaken',desc:'Partly cloudy · Light jacket needed',
       forecast:'https://www.meteoswiss.admin.ch/local-forecasts/interlaken/3800.html',webcam:null},
     trains:[
       {time:'12:30 PM',family:'ashok',desc:'GoldenPass Express — GVA → Montreux → Interlaken OST',note:'~3h · Scenic panoramic windows · Reservation needed',sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Interlaken+Ost&von=Gen%C3%A8ve&via=Montreux&datum=05.04.2026&zeit=12:30&abFahrt=true'},
@@ -512,7 +518,7 @@ const DAYS = [
   {
     date:'Sunday, Apr 6', short:'Apr 6', emoji:'⛰',
     location:'Birg · Schilthorn · Lauterbrunnen', split:false,
-    weather:{icon:'🌨',temp:'−3 to 2°C',loc:'Schilthorn 2,970m',desc:'Summit snow — warm layers essential!',
+    weather:{icon:'🌨',tempDay:'−1 to 2°C',tempNight:'−5 to −2°C',loc:'Schilthorn 2,970m',desc:'Summit conditions — winter gear essential!',
       forecast:'https://www.meteoswiss.admin.ch/local-forecasts/schilthorn.html',
       webcam:'https://schilthorn.swiss/en/pizgloria/Livecam'},
     trains:[
@@ -532,7 +538,7 @@ const DAYS = [
   {
     date:'Monday, Apr 7', short:'Apr 7', emoji:'🧗',
     location:'Grindelwald · First Cliff Walk', split:false,
-    weather:{icon:'🏔',temp:'2–10°C',loc:'Grindelwald 1,034m',desc:'Mountain valley · Check webcam before heading up',
+    weather:{icon:'🏔',tempDay:'6–10°C',tempNight:'0–4°C',loc:'Grindelwald 1,034m',desc:'Mountain valley · Warm layers + waterproof jacket',
       forecast:'https://www.meteoswiss.admin.ch/local-forecasts/grindelwald/3818.html',
       webcam:'https://grindelwald.swiss/en/service/webcams.html'},
     trains:[
@@ -550,7 +556,7 @@ const DAYS = [
   {
     date:'Tuesday, Apr 8', short:'Apr 8', emoji:'🏔',
     location:'Grindelwald → Zermatt → Tasch', split:false,
-    weather:{icon:'⛰',temp:'0–8°C',loc:'Zermatt 1,608m',desc:'Matterhorn often clear in morning — go early!',
+    weather:{icon:'⛰',tempDay:'5–8°C',tempNight:'−1 to 2°C',loc:'Zermatt 1,608m',desc:'Clear mornings best for Matterhorn views — go early!',
       forecast:'https://www.meteoswiss.admin.ch/local-forecasts/zermatt/3920.html',
       webcam:'https://www.zermatt.ch/en/media/webcams'},
     trains:[
@@ -568,7 +574,7 @@ const DAYS = [
   {
     date:'Wednesday, Apr 9', short:'Apr 9', emoji:'🚢',
     location:'Tasch → Lucerne · Boat Ride', split:false,
-    weather:{icon:'🌥',temp:'8–16°C',loc:'Lucerne',desc:'Lake area · Warmer than the Alps',
+    weather:{icon:'🌥',tempDay:'12–16°C',tempNight:'5–8°C',loc:'Lucerne',desc:'Lake area · Light jacket for morning/evening',
       forecast:'https://www.meteoswiss.admin.ch/local-forecasts/lucerne/6003.html',
       webcam:'https://www.luzern.com/en/activities/webcams/'},
     trains:[
@@ -584,7 +590,7 @@ const DAYS = [
   {
     date:'Thursday, Apr 10', short:'Apr 10', emoji:'🏛',
     location:'Lucerne → Zurich · Museums', split:false,
-    weather:{icon:'🌤',temp:'10–17°C',loc:'Zurich',desc:'City weather · Generally mild in April',
+    weather:{icon:'🌤',tempDay:'13–17°C',tempNight:'6–9°C',loc:'Zurich',desc:'City weather · Comfortable for walking',
       forecast:'https://www.meteoswiss.admin.ch/local-forecasts/zurich/8001.html',webcam:null},
     trains:[
       {time:'9:00 AM',family:'shared',desc:'Lucerne → Zurich HB',note:'~1h · IC train · Every 30 min',sbb:'https://www.sbb.ch/en/buying/pages/fahrplan/fahrplan.xhtml?nach=Z%C3%BCrich+HB&von=Luzern&datum=10.04.2026&zeit=09:00&abFahrt=true'},
@@ -882,20 +888,38 @@ async function renderItinerary() {
 
   // Weather
   if (d.weather) {
-    html += `<div class="weather-card">
-      <div class="wc-top">
-        <div>
-          <div class="wc-location">${d.weather.loc}</div>
-          <div class="wc-temp">${d.weather.temp}</div>
-          <div class="wc-desc">${d.weather.desc}</div>
-        </div>
-        <div class="wc-icon">${d.weather.icon}</div>
-      </div>
-      <div class="wc-links">
-        <a href="${d.weather.forecast}" class="wc-link" target="_blank">📡 Forecast</a>
-        ${d.weather.webcam ? `<a href="${d.weather.webcam}" class="wc-link" target="_blank">📷 Webcam</a>` : ''}
-      </div>
-    </div>`;
+    const w = d.weather;
+    // Clothing advice based on day temp
+    const dayTempNum = parseInt((w.tempDay||w.temp||'10').replace(/[^0-9\-]/,''));
+    const clothing = [];
+    if (dayTempNum <= 0) clothing.push('🧤 Gloves','🧣 Scarf','🧥 Heavy coat','🥾 Warm boots');
+    else if (dayTempNum <= 5) clothing.push('🧥 Winter jacket','🧣 Scarf','👟 Warm shoes');
+    else if (dayTempNum <= 10) clothing.push('🧥 Warm jacket','👕 Layers','☂ Rain jacket');
+    else if (dayTempNum <= 15) clothing.push('🧥 Light jacket','👕 T-shirt + layer');
+    else clothing.push('👕 T-shirt','🧥 Light jacket for evening');
+
+    html += '<div class="weather-card">' +
+      '<div class="wc-top">' +
+        '<div style="flex:1">' +
+          '<div class="wc-location">' + w.loc + '</div>' +
+          '<div class="wc-temp-labels">' +
+            '<span class="wc-temp-label">☀ Day</span>' +
+            '<span class="wc-temp-label" style="margin-left:' + (w.tempDay ? '52px' : '0') + '">🌙 Night</span>' +
+          '</div>' +
+          '<div class="wc-temps">' +
+            '<span class="wc-temp-day">' + (w.tempDay || w.temp) + '</span>' +
+            (w.tempNight ? '<span class="wc-temp-night">' + w.tempNight + '</span>' : '') +
+          '</div>' +
+          '<div class="wc-desc">' + w.desc + '</div>' +
+          '<div class="wc-clothing">' + clothing.map(c => '<span class="wc-clothing-tag">' + c + '</span>').join('') + '</div>' +
+        '</div>' +
+        '<div class="wc-icon">' + w.icon + '</div>' +
+      '</div>' +
+      '<div class="wc-links">' +
+        '<a href="' + w.forecast + '" class="wc-link" target="_blank">📡 Forecast</a>' +
+        (w.webcam ? '<a href="' + w.webcam + '" class="wc-link" target="_blank">📷 Webcam</a>' : '') +
+      '</div>' +
+    '</div>';
   }
 
   // Trains
